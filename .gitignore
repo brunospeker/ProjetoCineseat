@@ -3,6 +3,8 @@
 
 # Log file
 *.log
+*.local
+.DS_Store
 
 # BlueJ files
 *.ctxt
@@ -22,3 +24,116 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+### JAVA+Spring ###
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+backend/Cineseat/target/
+backend/Cineseat/.mvn/
+backend/Cineseat/.mvn/wrapper/maven-wrapper.jar
+backend/Cineseat/.idea/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+backend/Cineseat/.apt_generated
+backend/Cineseat/.classpath
+backend/Cineseat/.factorypath
+backend/Cineseat/.project
+backend/Cineseat/.settings
+backend/Cineseat/.springBeans
+backend/Cineseat/.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+backend/Cineseat/.idea
+backend/Cineseat/*.iws
+backend/Cineseat/*.iml
+backend/Cineseat/*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+/backend/Cineseat/nbproject/private/
+/backend/Cineseat/nbbuild/
+/backend/Cineseat/dist/
+/backend/Cineseat/nbdist/
+/backend/Cineseat/.nb-gradle/
+backend/Cineseat/build/
+backend/Cineseat/!**/src/main/**/build/
+backend/Cineseat/!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+backend/Cineseat/.vscode/
+
+### React ###
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+frontend/Cineseat/logs
+frontend/Cineseat/*.log
+frontend/Cineseat/npm-debug.log*
+frontend/Cineseat/yarn-debug.log*
+frontend/Cineseat/yarn-error.log*
+frontend/Cineseat/pnpm-debug.log*
+frontend/Cineseat/lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+frontend/Cineseat/node_modules
+frontend/Cineseat/dist
+frontend/Cineseat/dist-ssr
+frontend/Cineseat/*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+frontend/Cineseat/.vscode/*
+frontend/Cineseat/!.vscode/extensions.json
+frontend/Cineseat/.idea
+frontend/Cineseat/.DS_Store
+frontend/Cineseat/*.suo
+frontend/Cineseat/*.ntvs*
+frontend/Cineseat/*.njsproj
+frontend/Cineseat/*.sln
+frontend/Cineseat/*.sw?
