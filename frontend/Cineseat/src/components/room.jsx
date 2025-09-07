@@ -1,90 +1,64 @@
 import React, { useState, useEffect } from "react";
 import RoomList from "./RoomList";
-import RoomCRUD from "./RoomCRUD";
 import RoomDetails from "./RoomDetails";
-import { rooms as initialRooms } from "../data/rooms";
 import { syncWithIngressoAPI, useIngressoAPI } from "../services/ingressoAPI";
 import "../styles/Room.css";
 
-function Room(props) {
-    const [rooms, setRooms] = useState(initialRooms);
+function Room({ selectedCity }) {
+    const [rooms, setRooms] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState(null);
-    const [editingRoom, setEditingRoom] = useState(null);
-    const [showCRUD, setShowCRUD] = useState(false);
-    const [crudMode, setCrudMode] = useState("create");
     const [showDetails, setShowDetails] = useState(false);
     const [syncing, setSyncing] = useState(false);
     const [initialLoad, setInitialLoad] = useState(true);
     const { loading: apiLoading, error: apiError } = useIngressoAPI();
+    
+    // Mapear nomes de cidades para IDs da API
+    const getCityId = (cityName) => {
+    const cityMap = {
+      "Campinas": 1,
+      "São Paulo": 2,
+      "Rio de Janeiro": 3,
+      "Belo Horizonte": 4,
+      "Brasília": 5,
+      "Salvador": 6,
+      "Fortaleza": 7,
+      "Recife": 8
+    };
+    return cityMap[cityName] || 1;
+  };
 
-    // Carregar dados da API automaticamente na inicialização
+
     useEffect(() => {
-        const loadInitialData = async () => {
-            if (initialLoad) {
-                setSyncing(true);
-                try {
-                    const cityId = 1; // São Paulo
-                    const syncedRooms = await syncWithIngressoAPI([], cityId);
-                    if (syncedRooms.length > 0) {
-                        setRooms(syncedRooms);
-                    } else {
-                        // Se não conseguir dados da API, usar dados locais
-                        setRooms(initialRooms);
-                    }
-                } catch (error) {
-                    console.error('Erro ao carregar dados da API:', error);
-                    // Em caso de erro, usar dados locais
-                    setRooms(initialRooms);
-                } finally {
-                    setSyncing(false);
-                    setInitialLoad(false);
-                }
+        const loadRoomsFromAPI = async () => {
+            setSyncing(true);
+            try {
+                const cityId = getCityId(selectedCity);
+                console.log(`Carregando salas para ${selectedCity} (ID: ${cityId})`);
+                const apiRooms = await syncWithIngressoAPI([], cityId);
+                // Filtrar salas pela cidade selecionada
+                const filteredRooms = apiRooms.filter(room => 
+                    room.city === selectedCity || 
+                    (selectedCity === "São Paulo" && room.city === "Campinas") // Fallback para dados mock
+                );
+                setRooms(filteredRooms);
+                console.log(`${filteredRooms.length} salas encontradas para ${selectedCity}`);
+            } catch (error) {
+                console.error('Erro ao carregar dados da API:', error);
+                setRooms([]);
+            } finally {
+                setSyncing(false);
+                setInitialLoad(false);
             }
         };
 
-        loadInitialData();
-    }, [initialLoad]);
+        if (selectedCity) {
+            loadRoomsFromAPI();
+        }
+    }, [selectedCity, initialLoad]);
 
     const handleSelectRoom = (room) => {
         setSelectedRoom(room);
         setShowDetails(true);
-    };
-
-    const handleEditRoom = (room) => {
-        setEditingRoom(room);
-        setCrudMode("edit");
-        setShowCRUD(true);
-    };
-
-    const handleCreateRoom = () => {
-        setEditingRoom(null);
-        setCrudMode("create");
-        setShowCRUD(true);
-    };
-
-    const handleDeleteRoom = (roomId) => {
-        if (window.confirm("Tem certeza que deseja excluir esta sala?")) {
-            setRooms(prevRooms => prevRooms.filter(room => room.id !== roomId));
-        }
-    };
-
-    const handleSaveRoom = (roomData) => {
-        if (crudMode === "create") {
-            setRooms(prevRooms => [...prevRooms, roomData]);
-        } else {
-            setRooms(prevRooms => 
-                prevRooms.map(room => 
-                    room.id === roomData.id ? roomData : room
-                )
-            );
-        }
-        setShowCRUD(false);
-        setEditingRoom(null);
-    };
-
-    const handleCancelCRUD = () => {
-        setShowCRUD(false);
-        setEditingRoom(null);
     };
 
     const handleCloseDetails = () => {
@@ -92,22 +66,21 @@ function Room(props) {
         setSelectedRoom(null);
     };
 
-    const handleEditFromDetails = (room) => {
-        setShowDetails(false);
-        handleEditRoom(room);
-    };
-
-    const handleSyncWithAPI = async () => {
+    const handleRefreshData = async () => {
         setSyncing(true);
         try {
-            const cityId = 1; // São Paulo
-            const syncedRooms = await syncWithIngressoAPI(rooms, cityId);
-            setRooms(syncedRooms);
-            const apiRoomsCount = syncedRooms.filter(r => r.source === 'ingresso-api').length;
-            alert(`Sincronização concluída! ${apiRoomsCount} salas da API do Ingresso.com.`);
+            const cityId = getCityId(selectedCity);
+            const apiRooms = await syncWithIngressoAPI([], cityId);
+            // Filtrar salas pela cidade selecionada
+            const filteredRooms = apiRooms.filter(room => 
+                room.city === selectedCity || 
+                (selectedCity === "São Paulo" && room.city === "Campinas") // Fallback para dados mock
+            );
+            setRooms(filteredRooms);
+            alert(`Dados atualizados! ${filteredRooms.length} salas carregadas para ${selectedCity}.`);
         } catch (error) {
-            console.error('Erro na sincronização:', error);
-            alert('Erro ao sincronizar com a API. Verifique sua conexão com a internet.');
+            console.error('Erro ao atualizar dados:', error);
+            alert('Erro ao carregar dados da API.');
         } finally {
             setSyncing(false);
         }
@@ -116,60 +89,37 @@ function Room(props) {
     return (
         <>
             <div className="room-header">
-                <h2>Gerenciamento de Salas</h2>
+                <h2>Salas de Cinema</h2>
                 <div className="header-actions">
                     <button 
                         className="btn-secondary"
-                        onClick={handleSyncWithAPI}
+                        onClick={handleRefreshData}
                         disabled={syncing || apiLoading}
                     >
-                        {syncing ? 'Sincronizando...' : 'Sincronizar com API'}
+                        {syncing ? 'Carregando...' : 'Atualizar Dados'}
                     </button>
-                    <button 
-                         className="btn-primary"
-                         onClick={() => {
-                             setCrudMode("create");
-                             setEditingRoom(null);
-                             setShowCRUD(true);
-                         }}
-                     >
-                         Nova Sala
-                     </button>
                 </div>
             </div>
             {apiError && (
-                    <div className="api-error">
-                        <p>⚠️ Erro na API: {apiError}</p>
-                    </div>
-                )}
-                {initialLoad && syncing && (
-                    <div className="loading-indicator">
-                        <p>🔄 Carregando dados da API do Ingresso.com...</p>
-                    </div>
-                )}
+                <div className="api-error">
+                    <p>⚠️ Erro na API: {apiError}</p>
+                </div>
+            )}
+            {initialLoad && syncing && (
+                <div className="loading-indicator">
+                    <p>🔄 Carregando dados da API do Ingresso.com...</p>
+                </div>
+            )}
             
             <RoomList 
                 rooms={rooms}
                 onSelectRoom={handleSelectRoom}
-                onEditRoom={handleEditRoom}
-                onDeleteRoom={handleDeleteRoom}
-                onCreateRoom={handleCreateRoom}
             />
-            
-            {showCRUD && (
-                <RoomCRUD 
-                    room={editingRoom}
-                    mode={crudMode}
-                    onSave={handleSaveRoom}
-                    onCancel={handleCancelCRUD}
-                />
-            )}
             
             {showDetails && (
                 <RoomDetails 
                     room={selectedRoom}
                     onClose={handleCloseDetails}
-                    onEdit={handleEditFromDetails}
                 />
             )}
         </>

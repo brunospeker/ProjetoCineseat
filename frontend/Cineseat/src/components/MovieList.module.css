@@ -1,0 +1,47 @@
+.container {
+  padding: 30px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  margin: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.title {
+  color: #333;
+  margin-bottom: 25px;
+  font-size: 28px;
+  text-align: center;
+  border-bottom: 3px solid #007bff;
+  padding-bottom: 15px;
+}
+
+.moviesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.movieButton {
+  padding: 15px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.movieButton:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}

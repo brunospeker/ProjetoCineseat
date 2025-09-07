@@ -15,7 +15,7 @@ export default function SeatSelection({ session }) {
     );
   };
 
-  // Organizar assentos em grupos de 10
+
   const seatRows = [];
   for (let i = 0; i < seats.length; i += 10) {
     seatRows.push(seats.slice(i, i + 10));
@@ -35,7 +35,7 @@ export default function SeatSelection({ session }) {
         fontSize: "24px"
       }}>Assentos da sessão {session.time}</h2>
       
-      {/* Tela do cinema */}
+
       <div style={{
         textAlign: "center",
         marginBottom: "30px"
@@ -56,7 +56,7 @@ export default function SeatSelection({ session }) {
         }}>🎬 TELA 🎬</div>
       </div>
 
-      {/* Grid de assentos */}
+
       <div style={{
         display: "flex",
         flexDirection: "column",
@@ -70,7 +70,7 @@ export default function SeatSelection({ session }) {
             gap: "8px",
             alignItems: "center"
           }}>
-            {/* Label da fileira */}
+
             <span style={{
               width: "25px",
               fontSize: "14px",
@@ -81,7 +81,7 @@ export default function SeatSelection({ session }) {
               {String.fromCharCode(65 + rowIndex)}
             </span>
             
-            {/* Assentos da fileira */}
+
             {row.map((seat) => (
               <button
                 key={seat}
@@ -119,7 +119,7 @@ export default function SeatSelection({ session }) {
               </button>
             ))}
             
-            {/* Label da fileira (direita) */}
+
             <span style={{
               width: "25px",
               fontSize: "14px",
@@ -133,7 +133,7 @@ export default function SeatSelection({ session }) {
         ))}
       </div>
 
-      {/* Legenda */}
+
       <div style={{
         display: "flex",
         justifyContent: "center",
@@ -166,7 +166,7 @@ export default function SeatSelection({ session }) {
         </div>
       </div>
 
-      {/* Assentos selecionados */}
+
       {selectedSeats.length > 0 && (
         <div style={{
           textAlign: "center",

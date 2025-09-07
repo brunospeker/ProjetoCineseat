@@ -5,17 +5,18 @@ import MovieList from "./components/MovieList";
 import SessionList from "./components/SessionList";
 import SeatSelection from "./components/SeatSelection";
 import Room from "./components/room";
+import "./App.css";
 
 export default function App() {
   const [selectedCity, setSelectedCity] = useState("São Paulo");
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [selectedSession, setSelectedSession] = useState(null);
-  const [currentView, setCurrentView] = useState("movies"); // "movies" ou "rooms"
+  const [currentView, setCurrentView] = useState("movies"); 
 
   const renderContent = () => {
     switch (currentView) {
       case "rooms":
-        return <Room />;
+        return <Room selectedCity={selectedCity} />;
       case "movies":
       default:
         return (
@@ -32,7 +33,6 @@ export default function App() {
     <div>
       <Header selectedCity={selectedCity} setSelectedCity={setSelectedCity} />
       
-      {/* Navegação */}
       <div className="app-nav">
         <button 
           onClick={() => setCurrentView('movies')}
@@ -48,13 +48,7 @@ export default function App() {
         </button>
       </div>
       
-      <main style={{ 
-        padding: "0 20px 40px 20px", 
-        width: "100%", 
-        minHeight: "calc(100vh - 80px)", 
-        boxSizing: "border-box",
-        backgroundColor: "#f5f5f5"
-      }}>
+      <main style={{ padding: "20px" }}>
         {renderContent()}
       </main>
     </div>

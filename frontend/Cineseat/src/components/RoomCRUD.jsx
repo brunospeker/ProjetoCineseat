@@ -54,7 +54,7 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
       [name]: value
     }));
     
-    // Atualizar capacidade automaticamente quando rows ou seatsPerRow mudam
+  
     if (name === "rows" || name === "seatsPerRow") {
       const rows = name === "rows" ? parseInt(value) : formData.rows;
       const seatsPerRow = name === "seatsPerRow" ? parseInt(value) : formData.seatsPerRow;
@@ -65,7 +65,7 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
       }));
     }
     
-    // Limpar erro do campo quando o usuário começar a digitar
+  
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
@@ -133,7 +133,7 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
     
     const roomData = {
       ...formData,
-      id: room?.id || Date.now(), // Usar ID existente ou gerar novo
+      id: room?.id || Date.now(),
       seats: {
         total: formData.capacity,
         available: formData.capacity,
@@ -172,7 +172,7 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
         
         <form onSubmit={handleSubmit}>
           <div style={{ display: "grid", gap: "20px" }}>
-            {/* Nome da Sala */}
+    
             <div>
               <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
                 Nome da Sala *
@@ -194,7 +194,7 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
               {errors.name && <span style={{ color: "#dc3545", fontSize: "12px" }}>{errors.name}</span>}
             </div>
 
-            {/* Tipo e Status */}
+    
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
               <div>
                 <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
@@ -241,7 +241,7 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
               </div>
             </div>
 
-            {/* Cinema e Cidade */}
+    
             <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "15px" }}>
               <div>
                 <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
@@ -284,7 +284,7 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
               </div>
             </div>
 
-            {/* Configuração de Assentos */}
+    
             <div>
               <h4 style={{ margin: "0 0 10px 0" }}>Configuração de Assentos</h4>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "15px" }}>
@@ -356,11 +356,11 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
               </div>
             </div>
 
-            {/* Recursos */}
+    
             <div>
               <h4 style={{ margin: "0 0 10px 0" }}>Recursos da Sala</h4>
               
-              {/* Recursos Predefinidos */}
+      
               <div style={{ marginBottom: "15px" }}>
                 <label style={{ display: "block", marginBottom: "5px", fontSize: "14px" }}>
                   Recursos Disponíveis:
@@ -388,7 +388,7 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
                 </div>
               </div>
               
-              {/* Adicionar Recurso Personalizado */}
+      
               <div style={{ display: "flex", gap: "10px", marginBottom: "15px" }}>
                 <input
                   type="text"
@@ -420,7 +420,7 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
                 </button>
               </div>
               
-              {/* Recursos Selecionados */}
+      
               {formData.features.length > 0 && (
                 <div>
                   <label style={{ display: "block", marginBottom: "5px", fontSize: "14px" }}>
@@ -465,7 +465,7 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
             </div>
           </div>
 
-          {/* Botões */}
+  
           <div style={{ 
             display: "flex", 
             justifyContent: "flex-end", 

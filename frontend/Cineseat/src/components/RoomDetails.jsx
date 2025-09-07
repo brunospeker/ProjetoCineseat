@@ -1,7 +1,7 @@
 import React from "react";
 import { roomTypes, roomStatus } from "../data/rooms";
 
-export default function RoomDetails({ room, onClose, onEdit }) {
+export default function RoomDetails({ room, onClose }) {
   if (!room) return null;
 
   const getStatusColor = (status) => {
@@ -21,7 +21,7 @@ export default function RoomDetails({ room, onClose, onEdit }) {
 
   const occupancyPercentage = ((room.seats.occupied / room.seats.total) * 100).toFixed(1);
 
-  // Gerar layout visual dos assentos
+
   const generateSeatLayout = () => {
     const layout = [];
     for (let row = 1; row <= room.rows; row++) {
@@ -65,7 +65,7 @@ export default function RoomDetails({ room, onClose, onEdit }) {
         maxHeight: "90vh",
         overflow: "auto"
       }}>
-        {/* Header */}
+  
         <div style={{ 
           display: "flex", 
           justifyContent: "space-between", 
@@ -101,21 +101,7 @@ export default function RoomDetails({ room, onClose, onEdit }) {
             </div>
           </div>
           
-          <div style={{ display: "flex", gap: "10px" }}>
-            <button
-              onClick={() => onEdit(room)}
-              style={{
-                backgroundColor: "#ffc107",
-                color: "#212529",
-                border: "none",
-                padding: "10px 20px",
-                borderRadius: "5px",
-                cursor: "pointer",
-                fontSize: "14px"
-              }}
-            >
-              Editar Sala
-            </button>
+          <div>
             <button
               onClick={onClose}
               style={{
@@ -133,7 +119,7 @@ export default function RoomDetails({ room, onClose, onEdit }) {
           </div>
         </div>
 
-        {/* Informações Básicas */}
+  
         <div style={{ 
           display: "grid", 
           gridTemplateColumns: "1fr 1fr", 
@@ -208,7 +194,7 @@ export default function RoomDetails({ room, onClose, onEdit }) {
               </div>
             </div>
             
-            {/* Barra de Ocupação */}
+      
             <div style={{ marginBottom: "15px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "5px" }}>
                 <span style={{ fontSize: "14px", fontWeight: "bold" }}>Taxa de Ocupação</span>
@@ -232,7 +218,7 @@ export default function RoomDetails({ room, onClose, onEdit }) {
           </div>
         </div>
 
-        {/* Recursos */}
+  
         <div style={{ marginBottom: "30px" }}>
           <h3 style={{ margin: "0 0 15px 0", color: "#495057" }}>Recursos da Sala</h3>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
@@ -254,11 +240,11 @@ export default function RoomDetails({ room, onClose, onEdit }) {
           </div>
         </div>
 
-        {/* Layout Visual dos Assentos */}
+  
         <div>
           <h3 style={{ margin: "0 0 15px 0", color: "#495057" }}>Layout da Sala</h3>
           
-          {/* Tela */}
+  
           <div style={{ 
             textAlign: "center", 
             marginBottom: "25px",
@@ -282,7 +268,7 @@ export default function RoomDetails({ room, onClose, onEdit }) {
             }}>🎬 TELA 🎬</div>
           </div>
           
-          {/* Assentos */}
+  
           <div style={{ 
             display: "flex", 
             flexDirection: "column", 
@@ -310,7 +296,7 @@ export default function RoomDetails({ room, onClose, onEdit }) {
                   {String.fromCharCode(65 + rowIndex)}
                 </span>
                 {row.map((seat, seatIndex) => {
-                  // Adicionar espaço no meio para corredor
+        
                   const isMiddle = seatIndex === Math.floor(row.length / 2);
                   return (
                     <React.Fragment key={seatIndex}>
@@ -365,7 +351,7 @@ export default function RoomDetails({ room, onClose, onEdit }) {
             ))}
           </div>
           
-          {/* Legenda */}
+  
           <div style={{ 
             display: "flex", 
             justifyContent: "center", 
