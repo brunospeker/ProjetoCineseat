@@ -1,0 +1,60 @@
+.container {
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  margin: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid #e9ecef;
+}
+
+.title {
+  color: #333;
+  margin-bottom: 25px;
+  font-size: 24px;
+  text-align: center;
+  border-bottom: 2px solid #28a745;
+  padding-bottom: 15px;
+}
+
+.sessionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.sessionButton {
+  padding: 15px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sessionButton:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.sessionTime {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.sessionFormat {
+  font-size: 14px;
+  opacity: 0.9;
+}

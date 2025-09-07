@@ -12,7 +12,7 @@ function Room({ selectedCity }) {
     const [initialLoad, setInitialLoad] = useState(true);
     const { loading: apiLoading, error: apiError } = useIngressoAPI();
     
-    // Mapear nomes de cidades para IDs da API
+    
     const getCityId = (cityName) => {
     const cityMap = {
       "Campinas": 1,
@@ -35,10 +35,10 @@ function Room({ selectedCity }) {
                 const cityId = getCityId(selectedCity);
                 console.log(`Carregando salas para ${selectedCity} (ID: ${cityId})`);
                 const apiRooms = await syncWithIngressoAPI([], cityId);
-                // Filtrar salas pela cidade selecionada
+                
                 const filteredRooms = apiRooms.filter(room => 
                     room.city === selectedCity || 
-                    (selectedCity === "São Paulo" && room.city === "Campinas") // Fallback para dados mock
+                    (selectedCity === "São Paulo" && room.city === "Campinas")
                 );
                 setRooms(filteredRooms);
                 console.log(`${filteredRooms.length} salas encontradas para ${selectedCity}`);
@@ -71,10 +71,9 @@ function Room({ selectedCity }) {
         try {
             const cityId = getCityId(selectedCity);
             const apiRooms = await syncWithIngressoAPI([], cityId);
-            // Filtrar salas pela cidade selecionada
             const filteredRooms = apiRooms.filter(room => 
                 room.city === selectedCity || 
-                (selectedCity === "São Paulo" && room.city === "Campinas") // Fallback para dados mock
+                (selectedCity === "São Paulo" && room.city === "Campinas")
             );
             setRooms(filteredRooms);
             alert(`Dados atualizados! ${filteredRooms.length} salas carregadas para ${selectedCity}.`);

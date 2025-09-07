@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { roomTypes, roomStatus } from "../data/rooms";
+import styles from "./RoomCRUD.module.css";
 
 export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
   const [formData, setFormData] = useState({
@@ -145,36 +146,17 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
   };
 
   return (
-    <div style={{ 
-      position: "fixed", 
-      top: 0, 
-      left: 0, 
-      right: 0, 
-      bottom: 0, 
-      backgroundColor: "rgba(0,0,0,0.5)", 
-      display: "flex", 
-      justifyContent: "center", 
-      alignItems: "center",
-      zIndex: 1000
-    }}>
-      <div style={{
-        backgroundColor: "white",
-        padding: "30px",
-        borderRadius: "8px",
-        width: "90%",
-        maxWidth: "600px",
-        maxHeight: "90vh",
-        overflow: "auto"
-      }}>
-        <h2 style={{ marginTop: 0 }}>
+    <div className={styles.overlay}>
+      <div className={styles.modal}>
+        <h2 className={styles.title}>
           {mode === "create" ? "Nova Sala" : "Editar Sala"}
         </h2>
         
         <form onSubmit={handleSubmit}>
-          <div style={{ display: "grid", gap: "20px" }}>
+          <div className={styles.formGrid}>
     
             <div>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+              <label className={styles.label}>
                 Nome da Sala *
               </label>
               <input
@@ -182,35 +164,23 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  border: errors.name ? "2px solid #dc3545" : "1px solid #ddd",
-                  borderRadius: "4px",
-                  fontSize: "14px"
-                }}
+                className={errors.name ? styles.inputError : styles.input}
                 placeholder="Ex: Sala 1 - LASER"
               />
-              {errors.name && <span style={{ color: "#dc3545", fontSize: "12px" }}>{errors.name}</span>}
+              {errors.name && <span className={styles.errorText}>{errors.name}</span>}
             </div>
 
     
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
+            <div className={styles.gridTwoColumns}>
               <div>
-                <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+                <label className={styles.label}>
                   Tipo da Sala
                 </label>
                 <select
                   name="type"
                   value={formData.type}
                   onChange={handleInputChange}
-                  style={{
-                    width: "100%",
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    borderRadius: "4px",
-                    fontSize: "14px"
-                  }}
+                  className={styles.input}
                 >
                   {roomTypes.map(type => (
                     <option key={type.id} value={type.id}>{type.name}</option>
@@ -219,20 +189,14 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
               </div>
               
               <div>
-                <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+                <label className={styles.label}>
                   Status
                 </label>
                 <select
                   name="status"
                   value={formData.status}
                   onChange={handleInputChange}
-                  style={{
-                    width: "100%",
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    borderRadius: "4px",
-                    fontSize: "14px"
-                  }}
+                  className={styles.input}
                 >
                   {roomStatus.map(status => (
                     <option key={status.id} value={status.id}>{status.name}</option>
@@ -242,9 +206,9 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
             </div>
 
     
-            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "15px" }}>
+            <div className={styles.gridCinemaCity}>
               <div>
-                <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+                <label className={styles.label}>
                   Cinema *
                 </label>
                 <input
@@ -252,20 +216,14 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
                   name="cinema"
                   value={formData.cinema}
                   onChange={handleInputChange}
-                  style={{
-                    width: "100%",
-                    padding: "10px",
-                    border: errors.cinema ? "2px solid #dc3545" : "1px solid #ddd",
-                    borderRadius: "4px",
-                    fontSize: "14px"
-                  }}
+                  className={errors.cinema ? styles.inputError : styles.input}
                   placeholder="Ex: Cine Araújo Campo Limpo"
                 />
-                {errors.cinema && <span style={{ color: "#dc3545", fontSize: "12px" }}>{errors.cinema}</span>}
+                {errors.cinema && <span className={styles.errorText}>{errors.cinema}</span>}
               </div>
               
               <div>
-                <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+                <label className={styles.label}>
                   Cidade
                 </label>
                 <input
@@ -273,23 +231,17 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
                   name="city"
                   value={formData.city}
                   onChange={handleInputChange}
-                  style={{
-                    width: "100%",
-                    padding: "10px",
-                    border: "1px solid #ddd",
-                    borderRadius: "4px",
-                    fontSize: "14px"
-                  }}
+                  className={styles.input}
                 />
               </div>
             </div>
 
     
             <div>
-              <h4 style={{ margin: "0 0 10px 0" }}>Configuração de Assentos</h4>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "15px" }}>
+              <h4 className={styles.sectionTitle}>Configuração de Assentos</h4>
+              <div className={styles.gridThreeColumns}>
                 <div>
-                  <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+                  <label className={styles.label}>
                     Fileiras
                   </label>
                   <input
@@ -299,19 +251,13 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
                     onChange={handleInputChange}
                     min="1"
                     max="20"
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      border: errors.rows ? "2px solid #dc3545" : "1px solid #ddd",
-                      borderRadius: "4px",
-                      fontSize: "14px"
-                    }}
+                    className={errors.rows ? styles.inputError : styles.input}
                   />
-                  {errors.rows && <span style={{ color: "#dc3545", fontSize: "12px" }}>{errors.rows}</span>}
+                  {errors.rows && <span className={styles.errorText}>{errors.rows}</span>}
                 </div>
                 
                 <div>
-                  <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+                  <label className={styles.label}>
                     Assentos/Fileira
                   </label>
                   <input
@@ -321,19 +267,13 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
                     onChange={handleInputChange}
                     min="1"
                     max="30"
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      border: errors.seatsPerRow ? "2px solid #dc3545" : "1px solid #ddd",
-                      borderRadius: "4px",
-                      fontSize: "14px"
-                    }}
+                    className={errors.seatsPerRow ? styles.inputError : styles.input}
                   />
-                  {errors.seatsPerRow && <span style={{ color: "#dc3545", fontSize: "12px" }}>{errors.seatsPerRow}</span>}
+                  {errors.seatsPerRow && <span className={styles.errorText}>{errors.seatsPerRow}</span>}
                 </div>
                 
                 <div>
-                  <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+                  <label className={styles.label}>
                     Capacidade Total
                   </label>
                   <input
@@ -341,46 +281,31 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
                     name="capacity"
                     value={formData.capacity}
                     onChange={handleInputChange}
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      border: errors.capacity ? "2px solid #dc3545" : "1px solid #ddd",
-                      borderRadius: "4px",
-                      fontSize: "14px",
-                      backgroundColor: "#f8f9fa"
-                    }}
+                    className={styles.inputReadonly}
                     readOnly
                   />
-                  {errors.capacity && <span style={{ color: "#dc3545", fontSize: "12px" }}>{errors.capacity}</span>}
+                  {errors.capacity && <span className={styles.errorText}>{errors.capacity}</span>}
                 </div>
               </div>
             </div>
 
     
             <div>
-              <h4 style={{ margin: "0 0 10px 0" }}>Recursos da Sala</h4>
+              <h4 className={styles.sectionTitle}>Recursos da Sala</h4>
               
       
-              <div style={{ marginBottom: "15px" }}>
-                <label style={{ display: "block", marginBottom: "5px", fontSize: "14px" }}>
+              <div className={styles.featuresContainer}>
+                <label className={styles.labelSmall}>
                   Recursos Disponíveis:
                 </label>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                <div className={styles.featuresGrid}>
                   {availableFeatures.map(feature => (
                     <button
                       key={feature}
                       type="button"
                       onClick={() => addPredefinedFeature(feature)}
                       disabled={formData.features.includes(feature)}
-                      style={{
-                        padding: "4px 8px",
-                        border: "1px solid #ddd",
-                        borderRadius: "12px",
-                        fontSize: "12px",
-                        backgroundColor: formData.features.includes(feature) ? "#e9ecef" : "white",
-                        cursor: formData.features.includes(feature) ? "not-allowed" : "pointer",
-                        opacity: formData.features.includes(feature) ? 0.6 : 1
-                      }}
+                      className={formData.features.includes(feature) ? styles.featureButtonDisabled : styles.featureButton}
                     >
                       {feature}
                     </button>
@@ -389,32 +314,19 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
               </div>
               
       
-              <div style={{ display: "flex", gap: "10px", marginBottom: "15px" }}>
+              <div className={styles.addFeatureContainer}>
                 <input
                   type="text"
                   value={newFeature}
                   onChange={(e) => setNewFeature(e.target.value)}
                   placeholder="Adicionar recurso personalizado"
-                  style={{
-                    flex: 1,
-                    padding: "8px",
-                    border: "1px solid #ddd",
-                    borderRadius: "4px",
-                    fontSize: "14px"
-                  }}
+                  className={styles.addFeatureInput}
                   onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addFeature())}
                 />
                 <button
                   type="button"
                   onClick={addFeature}
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#28a745",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer"
-                  }}
+                  className={styles.addFeatureButton}
                 >
                   Adicionar
                 </button>
@@ -423,37 +335,20 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
       
               {formData.features.length > 0 && (
                 <div>
-                  <label style={{ display: "block", marginBottom: "5px", fontSize: "14px" }}>
+                  <label className={styles.labelSmall}>
                     Recursos Selecionados:
                   </label>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                  <div className={styles.selectedFeaturesGrid}>
                     {formData.features.map((feature, index) => (
                       <span
                         key={index}
-                        style={{
-                          backgroundColor: "#007bff",
-                          color: "white",
-                          padding: "4px 8px",
-                          borderRadius: "12px",
-                          fontSize: "12px",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "5px"
-                        }}
+                        className={styles.selectedFeature}
                       >
                         {feature}
                         <button
                           type="button"
                           onClick={() => removeFeature(feature)}
-                          style={{
-                            background: "none",
-                            border: "none",
-                            color: "white",
-                            cursor: "pointer",
-                            padding: "0",
-                            fontSize: "14px",
-                            lineHeight: 1
-                          }}
+                          className={styles.removeFeatureButton}
                         >
                           ×
                         </button>
@@ -466,39 +361,17 @@ export default function RoomCRUD({ room, onSave, onCancel, mode = "create" }) {
           </div>
 
   
-          <div style={{ 
-            display: "flex", 
-            justifyContent: "flex-end", 
-            gap: "10px", 
-            marginTop: "30px",
-            paddingTop: "20px",
-            borderTop: "1px solid #eee"
-          }}>
+          <div className={styles.buttonContainer}>
             <button
               type="button"
               onClick={onCancel}
-              style={{
-                padding: "10px 20px",
-                border: "1px solid #ddd",
-                borderRadius: "4px",
-                backgroundColor: "white",
-                cursor: "pointer",
-                fontSize: "14px"
-              }}
+              className={styles.cancelButton}
             >
               Cancelar
             </button>
             <button
               type="submit"
-              style={{
-                padding: "10px 20px",
-                border: "none",
-                borderRadius: "4px",
-                backgroundColor: "#007bff",
-                color: "white",
-                cursor: "pointer",
-                fontSize: "14px"
-              }}
+              className={styles.submitButton}
             >
               {mode === "create" ? "Criar Sala" : "Salvar Alterações"}
             </button>
