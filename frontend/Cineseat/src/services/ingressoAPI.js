@@ -1,11 +1,10 @@
-// Serviço para integração com a API do Ingresso.com
-// Documentação: https://api-content.ingresso.com/swagger/index.html
+
+//  https://api-content.ingresso.com/swagger/index.html
 
 import { useState } from 'react';
 
 const BASE_URL = 'https://api-content.ingresso.com';
 
-// Função para fazer requisições à API
 const apiRequest = async (endpoint, options = {}) => {
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
@@ -27,9 +26,9 @@ const apiRequest = async (endpoint, options = {}) => {
   }
 };
 
-// Serviços da API do Ingresso.com
+
 export const ingressoAPI = {
-  // Buscar cidades disponíveis
+
   getCities: async () => {
     try {
       return await apiRequest('/v0/templates/cities');
@@ -39,7 +38,7 @@ export const ingressoAPI = {
     }
   },
 
-  // Buscar cinemas por cidade
+
   getCinemasByCity: async (cityId) => {
     try {
       return await apiRequest(`/v0/templates/cities/${cityId}/theaters`);
@@ -49,7 +48,7 @@ export const ingressoAPI = {
     }
   },
 
-  // Buscar filmes em cartaz
+
   getMovies: async (cityId) => {
     try {
       return await apiRequest(`/v0/templates/cities/${cityId}/movies/soon`);
@@ -59,7 +58,7 @@ export const ingressoAPI = {
     }
   },
 
-  // Buscar sessões de um filme
+
   getMovieSessions: async (movieId, cityId) => {
     try {
       return await apiRequest(`/v0/templates/movies/${movieId}/cities/${cityId}/theaters`);
@@ -69,7 +68,7 @@ export const ingressoAPI = {
     }
   },
 
-  // Buscar detalhes de um cinema específico
+
   getTheaterDetails: async (theaterId) => {
     try {
       return await apiRequest(`/v0/templates/theaters/${theaterId}`);
@@ -79,7 +78,7 @@ export const ingressoAPI = {
     }
   },
 
-  // Buscar salas de um cinema específico
+
   getTheaterRooms: async (theaterId) => {
     try {
       const theaterDetails = await apiRequest(`/v0/templates/theaters/${theaterId}`);
@@ -92,7 +91,7 @@ export const ingressoAPI = {
   }
 };
 
-// Função para converter dados da API para o formato usado no sistema
+
 export const convertAPIDataToRooms = (apiData, cinemaName, cityName) => {
   if (!apiData || !Array.isArray(apiData)) {
     return [];
@@ -114,11 +113,10 @@ export const convertAPIDataToRooms = (apiData, cinemaName, cityName) => {
       available: Math.floor((room.capacity || 100) * 0.8), // Estimativa
       occupied: Math.floor((room.capacity || 100) * 0.2)   // Estimativa
     },
-    source: 'ingresso-api' // Identificar que veio da API
+    source: 'ingresso-api' 
   }));
 };
 
-// Função auxiliar para determinar o tipo da sala baseado no nome
 const determineRoomType = (roomName) => {
   const name = roomName.toLowerCase();
   
@@ -132,7 +130,7 @@ const determineRoomType = (roomName) => {
   return '2D';
 };
 
-// Função auxiliar para extrair recursos da sala
+
 const extractFeatures = (roomData) => {
   const features = ['Ar condicionado']; // Recurso padrão
   
@@ -159,7 +157,7 @@ const extractFeatures = (roomData) => {
   return features;
 };
 
-// Hook personalizado para usar a API do Ingresso.com
+
 export const useIngressoAPI = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -189,12 +187,12 @@ export const useIngressoAPI = () => {
   };
 };
 
-// Função para sincronizar dados da API com dados locais
+
 export const syncWithIngressoAPI = async (localRooms, cityId) => {
   try {
     console.log('Iniciando sincronização com API do Ingresso.com...');
     
-    // Buscar cinemas da cidade
+   
     const cinemas = await ingressoAPI.getCinemasByCity(cityId);
     
     if (!cinemas || cinemas.length === 0) {
@@ -204,8 +202,8 @@ export const syncWithIngressoAPI = async (localRooms, cityId) => {
     
     const apiRooms = [];
     
-    // Para cada cinema, buscar suas salas
-    for (const cinema of cinemas.slice(0, 3)) { // Limitar a 3 cinemas para não sobrecarregar
+  
+    for (const cinema of cinemas.slice(0, 3)) { 
       try {
         const rooms = await ingressoAPI.getTheaterRooms(cinema.id);
         const convertedRooms = convertAPIDataToRooms(rooms, cinema.name, cinema.city);
@@ -217,13 +215,13 @@ export const syncWithIngressoAPI = async (localRooms, cityId) => {
     
     console.log(`Sincronização concluída. ${apiRooms.length} salas encontradas na API.`);
     
-    // Combinar dados locais com dados da API
+   
     const localRoomsFiltered = localRooms.filter(room => room.source !== 'ingresso-api');
     return [...localRoomsFiltered, ...apiRooms];
     
   } catch (error) {
     console.error('Erro durante sincronização com API:', error);
-    return localRooms; // Retornar dados locais em caso de erro
+    return localRooms;
   }
 };
 
