@@ -293,12 +293,11 @@ export const convertAPIDataToRooms = (apiData, cinemaName, cityName) => {
       available: Math.floor((room.capacity || 100) * 0.8),
       occupied: Math.floor((room.capacity || 100) * 0.2)
     },
+<<<<<<< HEAD
     schedule: generateSchedule(),
     source: 'ingresso-api'
   }));
 };
-
-
 const determineRoomType = (roomName) => {
   const name = roomName.toLowerCase();
   
@@ -373,7 +372,6 @@ export const useIngressoAPI = () => {
 export const syncWithIngressoAPI = async (localRooms, cityId) => {
   try {
     console.log('Iniciando sincronização com API do Ingresso.com...');
-    
     const cinemas = await ingressoAPI.getCinemasByCity(cityId);
     
     if (!cinemas || cinemas.length === 0) {
@@ -382,7 +380,6 @@ export const syncWithIngressoAPI = async (localRooms, cityId) => {
     }
     
     const apiRooms = [];
-    
     for (const cinema of cinemas.slice(0, 3)) {
       try {
         const rooms = await ingressoAPI.getTheaterRooms(cinema.id);
@@ -395,6 +392,10 @@ export const syncWithIngressoAPI = async (localRooms, cityId) => {
     
     console.log(`Sincronização concluída. ${apiRooms.length} salas encontradas na API.`);
     
+<<<<<<< HEAD
+=======
+   
+>>>>>>> 5c4920ce36b84b53c9cea50ebc2f9ec18d921dd8
     const localRoomsFiltered = localRooms.filter(room => room.source !== 'ingresso-api');
     return [...localRoomsFiltered, ...apiRooms];
     
