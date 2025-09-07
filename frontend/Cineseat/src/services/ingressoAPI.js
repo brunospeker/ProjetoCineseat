@@ -82,7 +82,7 @@ export const ingressoAPI = {
   getTheaterRooms: async (theaterId) => {
     try {
       const theaterDetails = await apiRequest(`/v0/templates/theaters/${theaterId}`);
-      // A API pode não ter endpoint específico para salas, então extraímos das sessões
+      
       return theaterDetails?.rooms || [];
     } catch (error) {
       console.error('Erro ao buscar salas do cinema:', error);
@@ -132,7 +132,7 @@ const determineRoomType = (roomName) => {
 
 
 const extractFeatures = (roomData) => {
-  const features = ['Ar condicionado']; // Recurso padrão
+  const features = ['Ar condicionado']; 
   
   if (roomData.name) {
     const name = roomData.name.toLowerCase();
