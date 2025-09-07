@@ -17,7 +17,7 @@ function Room(props) {
     const [initialLoad, setInitialLoad] = useState(true);
     const { loading: apiLoading, error: apiError } = useIngressoAPI();
 
-    // Carregar dados da API automaticamente na inicialização
+    
     useEffect(() => {
         const loadInitialData = async () => {
             if (initialLoad) {
@@ -28,12 +28,12 @@ function Room(props) {
                     if (syncedRooms.length > 0) {
                         setRooms(syncedRooms);
                     } else {
-                        // Se não conseguir dados da API, usar dados locais
+                      
                         setRooms(initialRooms);
                     }
                 } catch (error) {
                     console.error('Erro ao carregar dados da API:', error);
-                    // Em caso de erro, usar dados locais
+                  
                     setRooms(initialRooms);
                 } finally {
                     setSyncing(false);
@@ -100,7 +100,7 @@ function Room(props) {
     const handleSyncWithAPI = async () => {
         setSyncing(true);
         try {
-            const cityId = 1; // São Paulo
+            const cityId = 1; 
             const syncedRooms = await syncWithIngressoAPI(rooms, cityId);
             setRooms(syncedRooms);
             const apiRoomsCount = syncedRooms.filter(r => r.source === 'ingresso-api').length;
