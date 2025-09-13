@@ -2,7 +2,7 @@ export const movies = [
   {
     id: 1,
     title: "Filme A",
-    city: "São Paulo",
+    city: consumirAPi(5),
     sessions: [
       { id: 1, time: "14:00", format: "2D" },
       { id: 2, time: "16:00", format: "3D" },

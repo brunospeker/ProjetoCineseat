@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CineseatApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CineseatApplication.class, args);
+        SpringApplication.run(CineseatApplication.class, args);
 	}
 
 }
