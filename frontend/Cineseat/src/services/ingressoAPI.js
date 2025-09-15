@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const BASE_URL = 'https://api-content.ingresso.com';
+const BASE_URL = '';
 
 const apiRequest = async (endpoint, options = {}) => {
   const fullUrl = `${BASE_URL}${endpoint}`;
