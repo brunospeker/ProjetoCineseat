@@ -1,8 +1,8 @@
-package com.maisprati.cineseat.repositories;
+package com.maisprati.Cineseat.repositories;
 
-import com.maisprati.cineseat.entities.SalaAvaliacao;
-import com.maisprati.cineseat.entities.Sala;
-import com.maisprati.cineseat.entities.User;
+import com.maisprati.Cineseat.entities.SalaAvaliacao;
+import com.maisprati.Cineseat.entities.Sala;
+import com.maisprati.Cineseat.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -62,4 +62,5 @@ public interface SalaAvaliacaoRepository extends JpaRepository<SalaAvaliacao, Lo
 
     // Buscar avaliações mais recentes de uma sala
     @Query("SELECT sa FROM SalaAvaliacao sa WHERE sa.sala = :sala AND sa.ativa = true ORDER BY sa.dataCriacao DESC")
-    List<SalaAvaliacao> findAvaliacoesRecente
+    List<SalaAvaliacao> findAvaliacoesRecente(@Param("sala") Sala sala);
+}

@@ -1,12 +1,12 @@
-package com.maisprati.cineseat.service;
+package com.maisprati.Cineseat.service;
 
-import com.maisprati.cineseat.dto.FilmeAvaliacaoDTO;
-import com.maisprati.cineseat.entities.FilmeAvaliacao;
-import com.maisprati.cineseat.entities.Filme;
-import com.maisprati.cineseat.entities.User;
-import com.maisprati.cineseat.repositories.FilmeAvaliacaoRepository;
-import com.maisprati.cineseat.repositories.FilmeRepository;
-import com.maisprati.cineseat.repositories.UserRepository;
+import com.maisprati.Cineseat.dto.FilmeAvaliacaoDTO;
+import com.maisprati.Cineseat.entities.FilmeAvaliacao;
+import com.maisprati.Cineseat.entities.Filme;
+import com.maisprati.Cineseat.entities.User;
+import com.maisprati.Cineseat.repositories.FilmeAvaliacaoRepository;
+import com.maisprati.Cineseat.repositories.FilmeRepository;
+import com.maisprati.Cineseat.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -196,7 +196,7 @@ public class FilmeAvaliacaoService {
         dto.setFilmeId(avaliacao.getFilme().getId());
         dto.setFilmeTitulo(avaliacao.getFilme().getTitulo());
         dto.setUsuarioId(avaliacao.getUsuario().getId());
-        dto.setUsuarioNome(avaliacao.getUsuario().getName());
+        dto.setUsuarioNome(avaliacao.getUsuario().getUsername());
         dto.setNota(avaliacao.getNota());
         dto.setComentario(avaliacao.getComentario());
         dto.setDataCriacao(avaliacao.getDataCriacao());
@@ -206,3 +206,4 @@ public class FilmeAvaliacaoService {
         dto.setDislikesCount(avaliacao.getDislikesCount());
         return dto;
     }
+}

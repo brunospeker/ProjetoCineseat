@@ -1,6 +1,6 @@
-package com.maisprati.cineseat.repositories;
+package com.maisprati.Cineseat.repositories;
 
-import com.maisprati.cineseat.entities.Sala;
+import com.maisprati.Cineseat.entities.Sala;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

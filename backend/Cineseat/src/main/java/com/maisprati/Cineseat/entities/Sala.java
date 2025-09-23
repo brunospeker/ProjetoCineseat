@@ -1,4 +1,4 @@
-package com.maisprati.cineseat.entities;
+package com.maisprati.Cineseat.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -45,6 +45,11 @@ public class Sala {
     // Relacionamento com avaliações
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SalaAvaliacao> avaliacoes;
+
+    // Relacionamento com cinema
+    @ManyToOne
+    @JoinColumn(name = "cinema_id")
+    private Cinema cinema;
 
     // Construtores
     public Sala() {
@@ -162,6 +167,9 @@ public class Sala {
     public void setAvaliacoes(List<SalaAvaliacao> avaliacoes) {
         this.avaliacoes = avaliacoes;
     }
+
+    public Cinema getCinema() {return cinema;}
+    public void setCinema(Cinema cinema) {this.cinema = cinema;}
 
     @PreUpdate
     public void preUpdate() {

@@ -1,9 +1,9 @@
-package com.maisprati.cineseat.service;
+package com.maisprati.Cineseat.service;
 
-import com.maisprati.cineseat.dto.SalaDTO;
-import com.maisprati.cineseat.entities.Sala;
-import com.maisprati.cineseat.repositories.SalaRepository;
-import com.maisprati.cineseat.repositories.SalaAvaliacaoRepository;
+import com.maisprati.Cineseat.dto.SalaDTO;
+import com.maisprati.Cineseat.entities.Sala;
+import com.maisprati.Cineseat.repositories.SalaRepository;
+import com.maisprati.Cineseat.repositories.SalaAvaliacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

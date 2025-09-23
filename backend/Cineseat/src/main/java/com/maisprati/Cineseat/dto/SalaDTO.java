@@ -1,4 +1,4 @@
-package com.maisprati.cineseat.dto;
+package com.maisprati.Cineseat.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

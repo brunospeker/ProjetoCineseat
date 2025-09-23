@@ -1,4 +1,4 @@
-package com.maisprati.cineseat.entities;
+package com.maisprati.Cineseat.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;

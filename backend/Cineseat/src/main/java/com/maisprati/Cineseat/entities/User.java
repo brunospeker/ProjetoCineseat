@@ -3,6 +3,7 @@ package com.maisprati.Cineseat.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -28,6 +29,9 @@ public class User {
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CinemaAvaliacao> reviews;
 
     public User(){}
 
@@ -107,7 +111,11 @@ public class User {
         this.createdAt = createdAt;
     }
 
-
+    public List<CinemaAvaliacao> getReviews() {
+        return reviews;
+    }
+    public void setReviews(List<CinemaAvaliacao> reviews) {
+        this.reviews = reviews;
     }
 
 }

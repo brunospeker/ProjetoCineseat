@@ -1,8 +1,8 @@
-package com.maisprati.cineseat.service;
+package com.maisprati.Cineseat.service;
 
-import com.maisprati.cineseat.dto.FilmeDTO;
-import com.maisprati.cineseat.entities.Filme;
-import com.maisprati.cineseat.repositories.FilmeRepository;
+import com.maisprati.Cineseat.dto.FilmeDTO;
+import com.maisprati.Cineseat.entities.Filme;
+import com.maisprati.Cineseat.repositories.FilmeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

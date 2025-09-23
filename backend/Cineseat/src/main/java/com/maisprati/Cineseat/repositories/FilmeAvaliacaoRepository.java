@@ -1,8 +1,8 @@
-package com.maisprati.cineseat.repositories;
+package com.maisprati.Cineseat.repositories;
 
-import com.maisprati.cineseat.entities.FilmeAvaliacao;
-import com.maisprati.cineseat.entities.Filme;
-import com.maisprati.cineseat.entities.User;
+import com.maisprati.Cineseat.entities.FilmeAvaliacao;
+import com.maisprati.Cineseat.entities.Filme;
+import com.maisprati.Cineseat.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
