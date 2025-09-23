@@ -1,13 +1,12 @@
-package com.malsprati.cineseat.controllers;
+package com.maisprati.Cineseat.controllers;
 
-import com.maisprati.cineseat.dto.SalaAvaliacaoDTO;
-import com.maisprati.cineseat.service.SalaAvaliacaoService;
+import com.maisprati.Cineseat.dto.SalaAvaliacaoDTO;
+import com.maisprati.Cineseat.service.SalaAvaliacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,7 +21,7 @@ public class SalaAvaliacaoController {
     @PostMapping("/salas/{salaId}/avaliacoes")
     public ResponseEntity<SalaAvaliacaoDTO> criarAvaliacao(
             @PathVariable Long salaId,
-            @Valid @RequestBody SalaAvaliacaoDTO salaAvaliacaoDTO) {
+            @RequestBody SalaAvaliacaoDTO salaAvaliacaoDTO) {
         try {
             SalaAvaliacaoDTO novaAvaliacao = salaAvaliacaoService.criarAvaliacao(salaId, salaAvaliacaoDTO);
             return new ResponseEntity<>(novaAvaliacao, HttpStatus.CREATED);
@@ -64,7 +63,7 @@ public class SalaAvaliacaoController {
     @PutMapping("/avaliacoes-salas/{id}")
     public ResponseEntity<SalaAvaliacaoDTO> atualizarAvaliacao(
             @PathVariable Long id,
-            @Valid @RequestBody SalaAvaliacaoDTO salaAvaliacaoDTO) {
+            @RequestBody SalaAvaliacaoDTO salaAvaliacaoDTO) {
         try {
             SalaAvaliacaoDTO avaliacaoAtualizada = salaAvaliacaoService.atualizarAvaliacao(id, salaAvaliacaoDTO);
             return new ResponseEntity<>(avaliacaoAtualizada, HttpStatus.OK);

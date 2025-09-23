@@ -1,13 +1,12 @@
-package com.maisprati.cineseat.controllers;
+package com.maisprati.Cineseat.controllers;
 
-import com.maisprati.cineseat.dto.FilmeAvaliacaoDTO;
-import com.maisprati.cineseat.service.FilmeAvaliacaoService;
+import com.maisprati.Cineseat.dto.FilmeAvaliacaoDTO;
+import com.maisprati.Cineseat.service.FilmeAvaliacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -88,7 +87,7 @@ public class FilmeAvaliacaoController {
 
     // POST /api/filme-avaliacoes - Criar nova avaliação
     @PostMapping
-    public ResponseEntity<?> criarAvaliacao(@Valid @RequestBody FilmeAvaliacaoDTO avaliacaoDTO) {
+    public ResponseEntity<?> criarAvaliacao(@RequestBody FilmeAvaliacaoDTO avaliacaoDTO) {
         Optional<FilmeAvaliacaoDTO> avaliacaoCriada = filmeAvaliacaoService.criarAvaliacao(avaliacaoDTO);
 
         if (avaliacaoCriada.isEmpty()) {
@@ -103,7 +102,7 @@ public class FilmeAvaliacaoController {
     @PutMapping("/{id}")
     public ResponseEntity<FilmeAvaliacaoDTO> atualizarAvaliacao(
             @PathVariable Long id,
-            @Valid @RequestBody FilmeAvaliacaoDTO avaliacaoDTO) {
+            @RequestBody FilmeAvaliacaoDTO avaliacaoDTO) {
         Optional<FilmeAvaliacaoDTO> avaliacaoAtualizada = filmeAvaliacaoService.atualizarAvaliacao(id, avaliacaoDTO);
         return avaliacaoAtualizada.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
