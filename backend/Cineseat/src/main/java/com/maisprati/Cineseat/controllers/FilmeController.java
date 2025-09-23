@@ -1,4 +1,3 @@
-
 package com.maisprati.Cineseat.controllers;
 
 import com.maisprati.Cineseat.dto.FilmeDTO;
