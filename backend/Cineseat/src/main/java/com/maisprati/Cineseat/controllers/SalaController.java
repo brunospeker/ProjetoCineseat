@@ -1,13 +1,12 @@
-package com.maisprati.cineseat.controllers;
+package com.maisprati.Cineseat.controllers;
 
-import com.maisprati.cineseat.dto.SalaDTO;
-import com.maisprati.cineseat.service.SalaService;
+import com.maisprati.Cineseat.dto.SalaDTO;
+import com.maisprati.Cineseat.service.SalaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,7 +78,7 @@ public class SalaController {
 
     // POST /api/salas - Criar nova sala
     @PostMapping
-    public ResponseEntity<SalaDTO> criarSala(@Valid @RequestBody SalaDTO salaDTO) {
+    public ResponseEntity<SalaDTO> criarSala(@RequestBody SalaDTO salaDTO) {
         try {
             SalaDTO salaCriada = salaService.salvarSala(salaDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(salaCriada);
@@ -90,8 +89,7 @@ public class SalaController {
 
     // PUT /api/salas/{id} - Atualizar sala
     @PutMapping("/{id}")
-    public ResponseEntity<SalaDTO> atualizarSala(@PathVariable Long id,
-                                                 @Valid @RequestBody SalaDTO salaDTO) {
+    public ResponseEntity<SalaDTO> atualizarSala(@PathVariable Long id, @RequestBody SalaDTO salaDTO) {
         Optional<SalaDTO> salaAtualizada = salaService.atualizarSala(id, salaDTO);
         return salaAtualizada.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -107,8 +105,7 @@ public class SalaController {
 
     // PATCH /api/salas/{id}/status - Ativar/Desativar sala
     @PatchMapping("/{id}/status")
-    public ResponseEntity<SalaDTO> alterarStatusSala(@PathVariable Long id,
-                                                     @RequestParam Boolean ativa) {
+    public ResponseEntity<SalaDTO> alterarStatusSala(@PathVariable Long id, @RequestParam Boolean ativa) {
         Optional<SalaDTO> salaAtualizada = salaService.alterarStatusSala(id, ativa);
         return salaAtualizada.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

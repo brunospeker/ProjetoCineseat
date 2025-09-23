@@ -1,13 +1,12 @@
-package com.maisprati.cineseat.controllers;
+package com.maisprati.Cineseat.controllers;
 
-import com.maisprati.cineseat.dto.FilmeDTO;
-import com.maisprati.cineseat.service.FilmeService;
+import com.maisprati.Cineseat.dto.FilmeDTO;
+import com.maisprati.Cineseat.service.FilmeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,7 +64,7 @@ public class FilmeController {
 
     // POST /api/filmes - Criar novo filme
     @PostMapping
-    public ResponseEntity<FilmeDTO> criarFilme(@Valid @RequestBody FilmeDTO filmeDTO) {
+    public ResponseEntity<FilmeDTO> criarFilme(@RequestBody FilmeDTO filmeDTO) {
         try {
             FilmeDTO filmeCriado = filmeService.salvarFilme(filmeDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(filmeCriado);
@@ -76,8 +75,7 @@ public class FilmeController {
 
     // PUT /api/filmes/{id} - Atualizar filme
     @PutMapping("/{id}")
-    public ResponseEntity<FilmeDTO> atualizarFilme(@PathVariable Long id,
-                                                   @Valid @RequestBody FilmeDTO filmeDTO) {
+    public ResponseEntity<FilmeDTO> atualizarFilme(@PathVariable Long id, @RequestBody FilmeDTO filmeDTO) {
         Optional<FilmeDTO> filmeAtualizado = filmeService.atualizarFilme(id, filmeDTO);
         return filmeAtualizado.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

@@ -1,12 +1,12 @@
-package com.maisprati.cineseat.service;
+package com.maisprati.Cineseat.service;
 
-import com.maisprati.cineseat.dto.SalaAvaliacaoDTO;
-import com.maisprati.cineseat.entities.SalaAvaliacao;
-import com.maisprati.cineseat.entities.Sala;
-import com.maisprati.cineseat.entities.User;
-import com.maisprati.cineseat.repositories.SalaAvaliacaoRepository;
-import com.maisprati.cineseat.repositories.SalaRepository;
-import com.maisprati.cineseat.repositories.UserRepository;
+import com.maisprati.Cineseat.dto.SalaAvaliacaoDTO;
+import com.maisprati.Cineseat.entities.SalaAvaliacao;
+import com.maisprati.Cineseat.entities.Sala;
+import com.maisprati.Cineseat.entities.User;
+import com.maisprati.Cineseat.repositories.SalaAvaliacaoRepository;
+import com.maisprati.Cineseat.repositories.SalaRepository;
+import com.maisprati.Cineseat.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -187,7 +187,7 @@ public class SalaAvaliacaoService {
         dto.setSalaId(avaliacao.getSala().getId());
         dto.setSalaNome(avaliacao.getSala().getNome());
         dto.setUsuarioId(avaliacao.getUsuario().getId());
-        dto.setUsuarioNome(avaliacao.getUsuario().getName());
+        dto.setUsuarioNome(avaliacao.getUsuario().getUsername());
         dto.setNota(avaliacao.getNota());
         dto.setNotaConforto(avaliacao.getNotaConforto());
         dto.setNotaSom(avaliacao.getNotaSom());
