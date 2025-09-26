@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -23,8 +25,16 @@ public class SalaAvaliacaoController {
             @PathVariable Long salaId,
             @RequestBody SalaAvaliacaoDTO salaAvaliacaoDTO) {
         try {
-            SalaAvaliacaoDTO novaAvaliacao = salaAvaliacaoService.criarAvaliacao(salaId, salaAvaliacaoDTO);
-            return new ResponseEntity<>(novaAvaliacao, HttpStatus.CREATED);
+            // Define o salaId no DTO antes de passar para o service
+            salaAvaliacaoDTO.setSalaId(salaId);
+
+            Optional<SalaAvaliacaoDTO> novaAvaliacao = salaAvaliacaoService.criarAvaliacao(salaAvaliacaoDTO);
+
+            if (novaAvaliacao.isPresent()) {
+                return new ResponseEntity<>(novaAvaliacao.get(), HttpStatus.CREATED);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -34,7 +44,7 @@ public class SalaAvaliacaoController {
     @GetMapping("/salas/{salaId}/avaliacoes")
     public ResponseEntity<List<SalaAvaliacaoDTO>> listarAvaliacoesPorSala(@PathVariable Long salaId) {
         try {
-            List<SalaAvaliacaoDTO> avaliacoes = salaAvaliacaoService.listarAvaliacoesPorSala(salaId);
+            List<SalaAvaliacaoDTO> avaliacoes = salaAvaliacaoService.buscarAvaliacoesPorSala(salaId);
             return new ResponseEntity<>(avaliacoes, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -45,8 +55,13 @@ public class SalaAvaliacaoController {
     @GetMapping("/avaliacoes-salas/{id}")
     public ResponseEntity<SalaAvaliacaoDTO> buscarAvaliacaoPorId(@PathVariable Long id) {
         try {
-            SalaAvaliacaoDTO avaliacao = salaAvaliacaoService.buscarPorId(id);
-            return new ResponseEntity<>(avaliacao, HttpStatus.OK);
+            Optional<SalaAvaliacaoDTO> avaliacao = salaAvaliacaoService.buscarAvaliacaoPorId(id);
+
+            if (avaliacao.isPresent()) {
+                return new ResponseEntity<>(avaliacao.get(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -55,7 +70,7 @@ public class SalaAvaliacaoController {
     // Listar todas as avaliações de salas
     @GetMapping("/avaliacoes-salas")
     public ResponseEntity<List<SalaAvaliacaoDTO>> listarTodasAvaliacoes() {
-        List<SalaAvaliacaoDTO> avaliacoes = salaAvaliacaoService.listarTodas();
+        List<SalaAvaliacaoDTO> avaliacoes = salaAvaliacaoService.buscarTodasAvaliacoes();
         return new ResponseEntity<>(avaliacoes, HttpStatus.OK);
     }
 
@@ -65,8 +80,13 @@ public class SalaAvaliacaoController {
             @PathVariable Long id,
             @RequestBody SalaAvaliacaoDTO salaAvaliacaoDTO) {
         try {
-            SalaAvaliacaoDTO avaliacaoAtualizada = salaAvaliacaoService.atualizarAvaliacao(id, salaAvaliacaoDTO);
-            return new ResponseEntity<>(avaliacaoAtualizada, HttpStatus.OK);
+            Optional<SalaAvaliacaoDTO> avaliacaoAtualizada = salaAvaliacaoService.atualizarAvaliacao(id, salaAvaliacaoDTO);
+
+            if (avaliacaoAtualizada.isPresent()) {
+                return new ResponseEntity<>(avaliacaoAtualizada.get(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -76,8 +96,13 @@ public class SalaAvaliacaoController {
     @DeleteMapping("/avaliacoes-salas/{id}")
     public ResponseEntity<Void> deletarAvaliacao(@PathVariable Long id) {
         try {
-            salaAvaliacaoService.deletarAvaliacao(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            boolean deletada = salaAvaliacaoService.deletarAvaliacao(id);
+
+            if (deletada) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -87,19 +112,86 @@ public class SalaAvaliacaoController {
     @GetMapping("/usuarios/{userId}/avaliacoes-salas")
     public ResponseEntity<List<SalaAvaliacaoDTO>> listarAvaliacoesPorUsuario(@PathVariable Long userId) {
         try {
-            List<SalaAvaliacaoDTO> avaliacoes = salaAvaliacaoService.listarAvaliacoesPorUsuario(userId);
+            List<SalaAvaliacaoDTO> avaliacoes = salaAvaliacaoService.buscarAvaliacoesPorUsuario(userId);
             return new ResponseEntity<>(avaliacoes, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    // Buscar média de avaliações de uma sala
+    // Buscar estatísticas detalhadas de uma sala
+    @GetMapping("/salas/{salaId}/avaliacoes/estatisticas")
+    public ResponseEntity<Map<String, Object>> obterEstatisticasSala(@PathVariable Long salaId) {
+        try {
+            Map<String, Object> estatisticas = salaAvaliacaoService.obterEstatisticasSala(salaId);
+
+            if (estatisticas.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            return new ResponseEntity<>(estatisticas, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Buscar média de avaliações de uma sala (mantido para compatibilidade)
     @GetMapping("/salas/{salaId}/avaliacoes/media")
     public ResponseEntity<Double> obterMediaAvaliacoes(@PathVariable Long salaId) {
         try {
-            Double media = salaAvaliacaoService.calcularMediaAvaliacoes(salaId);
+            Map<String, Object> estatisticas = salaAvaliacaoService.obterEstatisticasSala(salaId);
+
+            if (estatisticas.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            Double media = (Double) estatisticas.get("media_geral");
             return new ResponseEntity<>(media, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Curtir avaliação
+    @PostMapping("/avaliacoes-salas/{id}/like")
+    public ResponseEntity<SalaAvaliacaoDTO> curtirAvaliacao(@PathVariable Long id) {
+        try {
+            Optional<SalaAvaliacaoDTO> avaliacao = salaAvaliacaoService.curtirAvaliacao(id);
+
+            if (avaliacao.isPresent()) {
+                return new ResponseEntity<>(avaliacao.get(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Descurtir avaliação
+    @PostMapping("/avaliacoes-salas/{id}/dislike")
+    public ResponseEntity<SalaAvaliacaoDTO> descurtirAvaliacao(@PathVariable Long id) {
+        try {
+            Optional<SalaAvaliacaoDTO> avaliacao = salaAvaliacaoService.descurtirAvaliacao(id);
+
+            if (avaliacao.isPresent()) {
+                return new ResponseEntity<>(avaliacao.get(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Verificar se usuário já avaliou sala
+    @GetMapping("/salas/{salaId}/usuarios/{userId}/ja-avaliou")
+    public ResponseEntity<Boolean> verificarSeUsuarioJaAvaliou(
+            @PathVariable Long salaId,
+            @PathVariable Long userId) {
+        try {
+            boolean jaAvaliou = salaAvaliacaoService.usuarioJaAvaliouSala(salaId, userId);
+            return new ResponseEntity<>(jaAvaliou, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

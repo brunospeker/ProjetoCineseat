@@ -206,3 +206,4 @@ public class FilmeAvaliacaoService {
         dto.setDislikesCount(avaliacao.getDislikesCount());
         return dto;
     }
+}
