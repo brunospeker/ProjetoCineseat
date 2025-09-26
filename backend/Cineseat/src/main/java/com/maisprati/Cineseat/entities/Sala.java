@@ -46,6 +46,11 @@ public class Sala {
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SalaAvaliacao> avaliacoes;
 
+    // Relacionamento com cinema
+    @ManyToOne
+    @JoinColumn(name = "cinema_id")
+    private Cinema cinema;
+
     // Construtores
     public Sala() {
         this.dataCriacao = LocalDateTime.now();
@@ -162,6 +167,9 @@ public class Sala {
     public void setAvaliacoes(List<SalaAvaliacao> avaliacoes) {
         this.avaliacoes = avaliacoes;
     }
+
+    public Cinema getCinema() {return cinema;}
+    public void setCinema(Cinema cinema) {this.cinema = cinema;}
 
     @PreUpdate
     public void preUpdate() {

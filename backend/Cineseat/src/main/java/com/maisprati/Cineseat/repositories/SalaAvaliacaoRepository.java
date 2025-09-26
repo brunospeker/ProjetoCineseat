@@ -62,5 +62,5 @@ public interface SalaAvaliacaoRepository extends JpaRepository<SalaAvaliacao, Lo
 
     // Buscar avaliações mais recentes de uma sala
     @Query("SELECT sa FROM SalaAvaliacao sa WHERE sa.sala = :sala AND sa.ativa = true ORDER BY sa.dataCriacao DESC")
-    List<SalaAvaliacao> findAvaliacoesRecentesPorSala(@Param("sala") Sala sala);
+    List<SalaAvaliacao> findAvaliacoesRecente(@Param("sala") Sala sala);
 }
