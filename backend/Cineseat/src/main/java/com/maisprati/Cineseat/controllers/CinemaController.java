@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/cinemas")
-public class git sCinemaController {
+public class CinemaController {
 
     @Autowired
     private CinemaService cinemaService;
@@ -22,45 +22,41 @@ public class git sCinemaController {
         return ResponseEntity.ok(cinemaService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CinemaDTO> findById(@PathVariable Long id) {
-        Optional<CinemaDTO> cinema = cinemaService.findById(id);
-        return cinema.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    @GetMapping("/{idCinema}")
+    public ResponseEntity<CinemaDTO> findById(@PathVariable Long idCinema) {
+        Optional<CinemaDTO> cinema = cinemaService.findById(idCinema);
+        return cinema.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/city/{cityName}")
-    public ResponseEntity<List<CinemaDTO>> findByCityName(@PathVariable String cityName) {
-        return ResponseEntity.ok(cinemaService.findByCityName(cityName));
+    @GetMapping("/cidade/{cidade}")
+    public ResponseEntity<List<CinemaDTO>> findByCidade(@PathVariable String cidade) {
+        return ResponseEntity.ok(cinemaService.findByCidade(cidade));
     }
 
-    @GetMapping("/state/{state}")
-    public ResponseEntity<List<CinemaDTO>> findByState(@PathVariable String state) {
-        return ResponseEntity.ok(cinemaService.findByState(state));
+    @GetMapping("/estado/{estado}")
+    public ResponseEntity<List<CinemaDTO>> findByEstado(@PathVariable String estado) {
+        return ResponseEntity.ok(cinemaService.findByEstado(estado));
     }
 
-    @GetMapping("/address/{address}")
-    public ResponseEntity<List<CinemaDTO>> findByAddress(@PathVariable String address) {
-        return ResponseEntity.ok(cinemaService.findByAddress(address));
+    @GetMapping("/bairro/{bairro}")
+    public ResponseEntity<List<CinemaDTO>> findByBairro(@PathVariable String bairro) {
+        return ResponseEntity.ok(cinemaService.findByBairro(bairro));
     }
 
-    @GetMapping("/enabled")
-    public ResponseEntity<List<CinemaDTO>> findByEnableTrue() {
-        return ResponseEntity.ok(cinemaService.findByEnableTrue());
+    @GetMapping("/ativos")
+    public ResponseEntity<List<CinemaDTO>> findAtivos() {
+        return ResponseEntity.ok(cinemaService.findByAtivoTrue());
     }
 
     @GetMapping("/bomboniere")
-    public ResponseEntity<List<CinemaDTO>> findByHasBomboniereTrue() {
-        return ResponseEntity.ok(cinemaService.findByHasBomboniereTrue());
+    public ResponseEntity<List<CinemaDTO>> findComBomboniere() {
+        return ResponseEntity.ok(cinemaService.findByTemBomboniereTrue());
     }
 
-    @GetMapping("/corporation/{corporation}")
-    public ResponseEntity<List<CinemaDTO>> findByCorporation(@PathVariable String corporation) {
-        return ResponseEntity.ok(cinemaService.findByCorporation(corporation));
-    }
-
-    @GetMapping("/totalRooms/{rooms}")
-    public ResponseEntity<List<CinemaDTO>> findByTotalRooms(@PathVariable Integer rooms) {
-        return ResponseEntity.ok(cinemaService.findByTotalRooms(rooms));
+    @GetMapping("/salas/{totalSalas}")
+    public ResponseEntity<List<CinemaDTO>> findByTotalSalas(@PathVariable Integer totalSalas) {
+        return ResponseEntity.ok(cinemaService.findByTotalSalas(totalSalas));
     }
 
     @PostMapping
@@ -68,15 +64,18 @@ public class git sCinemaController {
         return ResponseEntity.ok(cinemaService.createCinema(cinema));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CinemaDTO> updateCinema(@PathVariable Long id, @RequestBody CinemaDTO dto) {
-        Optional<CinemaDTO> updatedCinema = cinemaService.updateCinema(id, dto);
-        return updatedCinema.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    @PutMapping("/{idCinema}")
+    public ResponseEntity<CinemaDTO> updateCinema(@PathVariable Long idCinema,
+                                                  @RequestBody CinemaDTO dto) {
+        Optional<CinemaDTO> updatedCinema = cinemaService.updateCinema(idCinema, dto);
+        return updatedCinema.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCinema(@PathVariable Long id) {
-        boolean deleted = cinemaService.deleteCinema(id);
-        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    @DeleteMapping("/{idCinema}")
+    public ResponseEntity<Void> deleteCinema(@PathVariable Long idCinema) {
+        boolean deleted = cinemaService.deleteCinema(idCinema);
+        return deleted ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
     }
 }

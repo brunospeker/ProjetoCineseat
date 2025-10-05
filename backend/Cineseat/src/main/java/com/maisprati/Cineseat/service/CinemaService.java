@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Service
 public class CinemaService {
+
     @Autowired
     private CinemaRepository cinemaRepository;
 
@@ -23,101 +24,86 @@ public class CinemaService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<CinemaDTO> findById(Long id) {
-        return cinemaRepository.findById(id).map(CinemaDTO::new);
+    public Optional<CinemaDTO> findById(Long idCinema) {
+        return cinemaRepository.findById(idCinema).map(CinemaDTO::new);
     }
 
-    public List<CinemaDTO> findByCityName(String cityName) {
-        return cinemaRepository.findByCityName(cityName)
+    public List<CinemaDTO> findByCidade(String cidade) {
+        return cinemaRepository.findByCidadeContainingIgnoreCase(cidade)
                 .stream()
                 .map(CinemaDTO::new)
                 .collect(Collectors.toList());
     }
 
-    public List<CinemaDTO> findByState(String state) {
-        return cinemaRepository.findByState(state)
+    public List<CinemaDTO> findByEstado(String estado) {
+        return cinemaRepository.findByEstadoContainingIgnoreCase(estado)
                 .stream()
                 .map(CinemaDTO::new)
                 .collect(Collectors.toList());
     }
 
-    public List<CinemaDTO> findByAddress(String address) {
-        return cinemaRepository.findByAddress(address)
+    public List<CinemaDTO> findByBairro(String bairro) {
+        return cinemaRepository.findByBairroContainingIgnoreCase(bairro)
                 .stream()
                 .map(CinemaDTO::new)
                 .collect(Collectors.toList());
     }
 
-    public List<CinemaDTO> findByEnableTrue() {
-        return cinemaRepository.findByEnableTrue()
+    public List<CinemaDTO> findByAtivoTrue() {
+        return cinemaRepository.findAllByAtivoTrue()
                 .stream()
                 .map(CinemaDTO::new)
                 .collect(Collectors.toList());
     }
 
-    public List<CinemaDTO> findByHasBomboniereTrue() {
-        return cinemaRepository.findByHasBomboniereTrue()
+    public List<CinemaDTO> findByTemBomboniereTrue() {
+        return cinemaRepository.findAllByTemBomboniereTrue()
                 .stream()
                 .map(CinemaDTO::new)
                 .collect(Collectors.toList());
     }
 
-    public List<CinemaDTO> findByCorporation(String corporation) {
-        return cinemaRepository.findByCorporation(corporation)
-                .stream()
-                .map(CinemaDTO::new)
-                .collect(Collectors.toList());
-    }
-
-    public List<CinemaDTO> findByTotalRooms(Integer rooms) {
-        return cinemaRepository.findByTotalRooms(rooms)
+    public List<CinemaDTO> findByTotalSalas(Integer totalSalas) {
+        return cinemaRepository.findByTotalSalas(totalSalas)
                 .stream()
                 .map(CinemaDTO::new)
                 .collect(Collectors.toList());
     }
 
     public CinemaDTO createCinema(Cinema cinema) {
+        cinema.setDataCriacao(LocalDateTime.now());
+        cinema.setDataAtualizacao(LocalDateTime.now());
         Cinema newCinema = cinemaRepository.save(cinema);
         return new CinemaDTO(newCinema);
     }
 
-    public Optional<CinemaDTO> updateCinema(Long id, CinemaDTO dto) {
-        return cinemaRepository.findById(id).map(cinema -> {
+    public Optional<CinemaDTO> updateCinema(Long idCinema, CinemaDTO dto) {
+        return cinemaRepository.findById(idCinema).map(cinema -> {
             updateCinemaData(cinema, dto);
             return new CinemaDTO(cinemaRepository.save(cinema));
         });
     }
 
     private void updateCinemaData(Cinema cinema, CinemaDTO dto) {
-        if (dto.getName() != null) cinema.setName(dto.getName());
+        if (dto.getNomeCinema() != null) cinema.setNomeCinema(dto.getNomeCinema());
         if (dto.getSite() != null) cinema.setSite(dto.getSite());
         if (dto.getCnpj() != null) cinema.setCnpj(dto.getCnpj());
-        if (dto.getState() != null) cinema.setState(dto.getState());
+        if (dto.getEstado() != null) cinema.setEstado(dto.getEstado());
         if (dto.getUf() != null) cinema.setUf(dto.getUf());
-        if (dto.getCityName() != null) cinema.setCityName(dto.getCityName());
-        if (dto.getCityId() != null) cinema.setCityId(dto.getCityId());
-        if (dto.getAddress() != null) cinema.setAddress(dto.getAddress());
-        if (dto.getAddressComplement() != null) cinema.setAddressComplement(dto.getAddressComplement());
-        if (dto.getNeighborhood() != null) cinema.setNeighborhood(dto.getNeighborhood());
-        if (dto.getNumber() != null) cinema.setNumber(dto.getNumber());
-        if (dto.getImagesJson() != null) cinema.setImagesJson(dto.getImagesJson());
-        if (dto.getHasBomboniere() != null) cinema.setHasBomboniere(dto.getHasBomboniere());
-        if (dto.getHasSession() != null) cinema.setHasSession(dto.getHasSession());
-        if (dto.getHasSeatDistancePolicy() != null) cinema.setHasSeatDistancePolicy(dto.getHasSeatDistancePolicy());
-        if (dto.getHasSeatDistancePolicyArena() != null) cinema.setHasSeatDistancePolicyArena(dto.getHasSeatDistancePolicyArena());
-        if (dto.getDeliveryType() != null) cinema.setDeliveryType(dto.getDeliveryType());
-        if (dto.getCorporation() != null) cinema.setCorporation(dto.getCorporation());
-        if (dto.getCorporationId() != null) cinema.setCorporationId(dto.getCorporationId());
-        if (dto.getOperationPoliciesJson() != null) cinema.setOperationPoliciesJson(dto.getOperationPoliciesJson());
-        if (dto.getTotalRooms() != null) cinema.setTotalRooms(dto.getTotalRooms());
-        if (dto.getEnable() != null) cinema.setEnable(dto.getEnable());
+        if (dto.getCidade() != null) cinema.setCidade(dto.getCidade());
+        if (dto.getIdCidade() != null) cinema.setIdCidade(dto.getIdCidade());
+        if (dto.getBairro() != null) cinema.setBairro(dto.getBairro());
+        if (dto.getNumero() != null) cinema.setNumero(dto.getNumero());
+        if (dto.getImagensJson() != null) cinema.setImagensJson(dto.getImagensJson());
+        if (dto.getTemBomboniere() != null) cinema.setTemBomboniere(dto.getTemBomboniere());
+        if (dto.getTotalSalas() != null) cinema.setTotalSalas(dto.getTotalSalas());
+        if (dto.getAtivo() != null) cinema.setAtivo(dto.getAtivo());
 
-        cinema.setUpdateDate(LocalDateTime.now());
+        cinema.setDataAtualizacao(LocalDateTime.now());
     }
 
-
-    public boolean deleteCinema(Long id) {
-        return cinemaRepository.findById(id).map(cinema -> {
+    public boolean deleteCinema(Long idCinema) {
+        return cinemaRepository.findById(idCinema).map(cinema -> {
             cinemaRepository.delete(cinema);
             return true;
         }).orElse(false);
