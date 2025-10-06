@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Sun, Moon } from "lucide-react";
 import logoDark from "../assets/logo-dark.jpeg";   // logo para fundo escuro
 import logoLight from "../assets/logo-light.jpeg"; // logo para fundo claro
@@ -35,13 +36,14 @@ export default function Navbar({ darkMode, setDarkMode }) {
           {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
 
-        <button
+        <Link
+          to="/login"
           className={`border px-4 py-1 rounded transition ${
             darkMode ? "hover:bg-red-600" : "hover:bg-red-400"
           }`}
         >
           Entrar
-        </button>
+        </Link>
       </div>
     </nav>
   );

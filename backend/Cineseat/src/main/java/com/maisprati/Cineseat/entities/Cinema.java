@@ -68,8 +68,8 @@ public class Cinema {
     @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Sala> salas;
 
-    @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CinemaAvaliacao> reviews;
+//    @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<CinemaAvaliacao> reviews;
 
     public Cinema(){}
 
@@ -194,10 +194,10 @@ public class Cinema {
     public List<Sala> getSalas() {return salas;}
     public void setSalas(List<Sala> salas) {this.salas = salas;}
 
-    public List<CinemaAvaliacao> getReviews() {
-        return reviews;
-    }
-    public void setReviews(List<CinemaAvaliacao> reviews) {
-        this.reviews = reviews;
-    }
+//    public List<CinemaAvaliacao> getReviews() {
+//        return reviews;
+//    }
+//    public void setReviews(List<CinemaAvaliacao> reviews) {
+//        this.reviews = reviews;
+//    }
 }

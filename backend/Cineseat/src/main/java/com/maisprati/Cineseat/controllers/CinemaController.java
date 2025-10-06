@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/cinemas")
-public class git sCinemaController {
+public class CinemaController {
 
     @Autowired
     private CinemaService cinemaService;
