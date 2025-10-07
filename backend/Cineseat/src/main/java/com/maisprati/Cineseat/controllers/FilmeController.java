@@ -89,15 +89,4 @@ public class FilmeController {
                 : ResponseEntity.notFound().build();
     }
 
-    // POST /api/filmes/sincronizar - Sincronizar com API da Ingresso.com
-    @PostMapping("/sincronizar")
-    public ResponseEntity<String> sincronizarComIngressoAPI() {
-        try {
-            filmeService.sincronizarComIngressoAPI();
-            return ResponseEntity.ok("Sincronização iniciada com sucesso");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao sincronizar: " + e.getMessage());
-        }
-    }
 }

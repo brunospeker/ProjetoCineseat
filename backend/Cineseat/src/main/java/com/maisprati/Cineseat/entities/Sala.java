@@ -12,6 +12,9 @@ public class Sala {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "ingresso_id", unique = true)
+    private String ingressoId;
+
     @Column(nullable = false)
     private String nome;
 
@@ -67,15 +70,16 @@ public class Sala {
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
 
+    public String getIngressoId() { return ingressoId; }
+    public void setIngressoId(String ingressoId) { this.ingressoId = ingressoId; }
+
     public String getNome() {
         return nome;
     }
-
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -83,7 +87,6 @@ public class Sala {
     public Integer getNumeroSala() {
         return numeroSala;
     }
-
     public void setNumeroSala(Integer numeroSala) {
         this.numeroSala = numeroSala;
     }
@@ -91,7 +94,6 @@ public class Sala {
     public Integer getCapacidadeTotal() {
         return capacidadeTotal;
     }
-
     public void setCapacidadeTotal(Integer capacidadeTotal) {
         this.capacidadeTotal = capacidadeTotal;
     }
@@ -99,7 +101,6 @@ public class Sala {
     public String getTipoTela() {
         return tipoTela;
     }
-
     public void setTipoTela(String tipoTela) {
         this.tipoTela = tipoTela;
     }
@@ -107,7 +108,6 @@ public class Sala {
     public String getTipoSom() {
         return tipoSom;
     }
-
     public void setTipoSom(String tipoSom) {
         this.tipoSom = tipoSom;
     }
@@ -115,7 +115,6 @@ public class Sala {
     public Boolean getAcessivel() {
         return acessivel;
     }
-
     public void setAcessivel(Boolean acessivel) {
         this.acessivel = acessivel;
     }
@@ -123,7 +122,6 @@ public class Sala {
     public Boolean getArCondicionado() {
         return arCondicionado;
     }
-
     public void setArCondicionado(Boolean arCondicionado) {
         this.arCondicionado = arCondicionado;
     }
@@ -131,7 +129,6 @@ public class Sala {
     public String getDescricao() {
         return descricao;
     }
-
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
@@ -139,7 +136,6 @@ public class Sala {
     public Boolean getAtiva() {
         return ativa;
     }
-
     public void setAtiva(Boolean ativa) {
         this.ativa = ativa;
     }
@@ -147,7 +143,6 @@ public class Sala {
     public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
-
     public void setDataCriacao(LocalDateTime dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
@@ -155,7 +150,6 @@ public class Sala {
     public LocalDateTime getDataAtualizacao() {
         return dataAtualizacao;
     }
-
     public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
         this.dataAtualizacao = dataAtualizacao;
     }
@@ -163,7 +157,6 @@ public class Sala {
     public List<SalaAvaliacao> getAvaliacoes() {
         return avaliacoes;
     }
-
     public void setAvaliacoes(List<SalaAvaliacao> avaliacoes) {
         this.avaliacoes = avaliacoes;
     }

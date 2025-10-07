@@ -42,6 +42,12 @@ public class SalaService {
                 .map(this::convertToDTO);
     }
 
+    // Buscar sala por ID da Ingresso.com
+    public Optional<SalaDTO> buscarPorIngressoId(String ingressoId) {
+        return salaRepository.findByIngressoId(ingressoId)
+                .map(this::convertToDTO);
+    }
+
     // Buscar sala por número
     public Optional<SalaDTO> buscarSalaPorNumero(Integer numeroSala) {
         return salaRepository.findByNumeroSala(numeroSala)
@@ -120,6 +126,7 @@ public class SalaService {
     private SalaDTO convertToDTO(Sala sala) {
         SalaDTO dto = new SalaDTO();
         dto.setId(sala.getId());
+        dto.setIngressoId(sala.getIngressoId());
         dto.setNome(sala.getNome());
         dto.setNumeroSala(sala.getNumeroSala());
         dto.setCapacidadeTotal(sala.getCapacidadeTotal());
@@ -144,6 +151,7 @@ public class SalaService {
     private Sala convertToEntity(SalaDTO dto) {
         Sala sala = new Sala();
         sala.setId(dto.getId());
+        sala.setIngressoId(dto.getIngressoId());
         sala.setNome(dto.getNome());
         sala.setNumeroSala(dto.getNumeroSala());
         sala.setCapacidadeTotal(dto.getCapacidadeTotal());
@@ -158,6 +166,7 @@ public class SalaService {
 
     // Atualizar dados da sala existente
     private void atualizarDadosSala(Sala sala, SalaDTO dto) {
+        if (dto.getIngressoId() != null) sala.setIngressoId(dto.getIngressoId());
         if (dto.getNome() != null) sala.setNome(dto.getNome());
         if (dto.getNumeroSala() != null) sala.setNumeroSala(dto.getNumeroSala());
         if (dto.getCapacidadeTotal() != null) sala.setCapacidadeTotal(dto.getCapacidadeTotal());
