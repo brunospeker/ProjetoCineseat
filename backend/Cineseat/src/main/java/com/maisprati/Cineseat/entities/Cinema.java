@@ -2,11 +2,13 @@ package com.maisprati.Cineseat.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "cinemas")
 public class Cinema {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCinema;
@@ -39,7 +41,6 @@ public class Cinema {
     @Column(name = "data_atualizacao", nullable = false)
     private LocalDateTime dataAtualizacao;
 
-    @Column(nullable = false)
     private Boolean ativo;
 
     @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -48,11 +49,12 @@ public class Cinema {
     @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CinemaAvaliacao> avaliacoes;
 
-    public Cinema() {}
+    public Cinema() {
+    }
 
     public Cinema(Long idCinema, String nomeCinema, String site, String cnpj, String estado, String uf,
-                  String cidade, String idCidade, String bairro, String numero,
-                  String imagensJson, Boolean temBomboniere, Integer totalSalas, Boolean ativo) {
+            String cidade, String idCidade, String bairro, String numero,
+            String imagensJson, Boolean temBomboniere, List<Sala> salas, Boolean ativo) {
         this.idCinema = idCinema;
         this.nomeCinema = nomeCinema;
         this.site = site;
@@ -65,75 +67,187 @@ public class Cinema {
         this.numero = numero;
         this.imagensJson = imagensJson;
         this.temBomboniere = temBomboniere;
-        this.totalSalas = totalSalas;
+        this.salas = salas;
+        this.totalSalas = (salas != null) ? salas.size() : 0;
         this.ativo = ativo;
     }
 
     @PrePersist
-    public void inicializarDatas() {
-        this.dataCriacao = LocalDateTime.now();
+    @PreUpdate
+    public void atualizarDadosAutomaticos() {
+        atualizarTotalSalas();
         this.dataAtualizacao = LocalDateTime.now();
+        if (this.dataCriacao == null) {
+            this.dataCriacao = LocalDateTime.now();
+        }
         if (this.ativo == null) {
             this.ativo = true;
         }
     }
 
-    @PreUpdate
-    public void atualizar() {
-        this.dataAtualizacao = LocalDateTime.now();
+    public void atualizarTotalSalas() {
+        this.totalSalas = (this.salas != null) ? this.salas.size() : 0;
     }
 
-    public Long getIdCinema() { return idCinema; }
-    public void setIdCinema(Long idCinema) { this.idCinema = idCinema; }
+    public Long getIdCinema() {
+        return idCinema;
+    }
 
-    public String getNomeCinema() { return nomeCinema; }
-    public void setNomeCinema(String nomeCinema) { this.nomeCinema = nomeCinema; }
+    public void setIdCinema(Long idCinema) {
+        this.idCinema = idCinema;
+    }
 
-    public String getSite() { return site; }
-    public void setSite(String site) { this.site = site; }
+    public String getNomeCinema() {
+        return nomeCinema;
+    }
 
-    public String getCnpj() { return cnpj; }
-    public void setCnpj(String cnpj) { this.cnpj = cnpj; }
+    public void setNomeCinema(String nomeCinema) {
+        this.nomeCinema = nomeCinema;
+    }
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public String getSite() {
+        return site;
+    }
 
-    public String getUf() { return uf; }
-    public void setUf(String uf) { this.uf = uf; }
+    public void setSite(String site) {
+        this.site = site;
+    }
 
-    public String getCidade() { return cidade; }
-    public void setCidade(String cidade) { this.cidade = cidade; }
+    public String getCnpj() {
+        return cnpj;
+    }
 
-    public String getIdCidade() { return idCidade; }
-    public void setIdCidade(String idCidade) { this.idCidade = idCidade; }
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
+    }
 
-    public String getBairro() { return bairro; }
-    public void setBairro(String bairro) { this.bairro = bairro; }
+    public String getEstado() {
+        return estado;
+    }
 
-    public String getNumero() { return numero; }
-    public void setNumero(String numero) { this.numero = numero; }
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
-    public String getImagensJson() { return imagensJson; }
-    public void setImagensJson(String imagensJson) { this.imagensJson = imagensJson; }
+    public String getUf() {
+        return uf;
+    }
 
-    public Boolean getTemBomboniere() { return temBomboniere; }
-    public void setTemBomboniere(Boolean temBomboniere) { this.temBomboniere = temBomboniere; }
+    public void setUf(String uf) {
+        this.uf = uf;
+    }
 
-    public Integer getTotalSalas() { return totalSalas; }
-    public void setTotalSalas(Integer totalSalas) { this.totalSalas = totalSalas; }
+    public String getCidade() {
+        return cidade;
+    }
 
-    public LocalDateTime getDataCriacao() { return dataCriacao; }
-    public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
 
-    public LocalDateTime getDataAtualizacao() { return dataAtualizacao; }
-    public void setDataAtualizacao(LocalDateTime dataAtualizacao) { this.dataAtualizacao = dataAtualizacao; }
+    public String getIdCidade() {
+        return idCidade;
+    }
 
-    public Boolean getAtivo() { return ativo; }
-    public void setAtivo(Boolean ativo) { this.ativo = ativo; }
+    public void setIdCidade(String idCidade) {
+        this.idCidade = idCidade;
+    }
 
-    public List<Sala> getSalas() { return salas; }
-    public void setSalas(List<Sala> salas) { this.salas = salas; }
+    public String getBairro() {
+        return bairro;
+    }
 
-    public List<CinemaAvaliacao> getAvaliacoes() { return avaliacoes; }
-    public void setAvaliacoes(List<CinemaAvaliacao> avaliacoes) { this.avaliacoes = avaliacoes; }
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public String getImagensJson() {
+        return imagensJson;
+    }
+
+    public void setImagensJson(String imagensJson) {
+        this.imagensJson = imagensJson;
+    }
+
+    public Boolean getTemBomboniere() {
+        return temBomboniere;
+    }
+
+    public void setTemBomboniere(Boolean temBomboniere) {
+        this.temBomboniere = temBomboniere;
+    }
+
+    public int getTotalSalas() {
+        return totalSalas != null ? totalSalas.intValue() : 0;
+    }
+
+    public void setTotalSalas(Integer totalSalas) {
+        this.totalSalas = totalSalas;
+    }
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public List<Sala> getSalas() {
+        return salas;
+    }
+
+    public void setSalas(List<Sala> salas) {
+        this.salas = salas;
+        this.totalSalas = (salas != null) ? salas.size() : 0;
+    }
+
+    public void addSala(Sala sala) {
+        if (salas == null) {
+            salas = new ArrayList<>();
+        }
+        salas.add(sala);
+        sala.setCinema(this);
+        atualizarTotalSalas();
+    }
+
+    public void removeSala(Sala sala) {
+        if (this.salas != null) {
+            this.salas.remove(sala);
+            this.totalSalas = this.salas.size();
+        }
+    }
+
+    public List<CinemaAvaliacao> getAvaliacoes() {
+        return avaliacoes;
+    }
+
+    public void setAvaliacoes(List<CinemaAvaliacao> avaliacoes) {
+        this.avaliacoes = avaliacoes;
+    }
+
 }

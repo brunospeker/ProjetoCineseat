@@ -1,15 +1,18 @@
 package com.maisprati.Cineseat.service;
 
-import com.maisprati.Cineseat.dto.SalaDTO;
-import com.maisprati.Cineseat.entities.Sala;
-import com.maisprati.Cineseat.repositories.SalaRepository;
-import com.maisprati.Cineseat.repositories.SalaAvaliacaoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.maisprati.Cineseat.dto.SalaDTO;
+import com.maisprati.Cineseat.entities.Cinema;
+import com.maisprati.Cineseat.entities.Sala;
+import com.maisprati.Cineseat.repositories.CinemaRepository;
+import com.maisprati.Cineseat.repositories.SalaAvaliacaoRepository;
+import com.maisprati.Cineseat.repositories.SalaRepository;
 
 @Service
 public class SalaService {
@@ -19,6 +22,9 @@ public class SalaService {
 
     @Autowired
     private SalaAvaliacaoRepository salaAvaliacaoRepository;
+
+    @Autowired
+    private CinemaRepository cinemaRepository;
 
     // Buscar todas as salas
     public List<SalaDTO> buscarTodasSalas() {
@@ -82,8 +88,21 @@ public class SalaService {
 
     // Salvar sala
     public SalaDTO salvarSala(SalaDTO salaDTO) {
+        if (salaDTO.getIdCinema() == null) {
+            throw new RuntimeException("ID do Cinema não pode ser nulo");
+        }
+
+        Cinema cinema = cinemaRepository.findById(salaDTO.getIdCinema())
+                .orElseThrow(() -> new RuntimeException("Cinema não encontrado"));
+
         Sala sala = convertToEntity(salaDTO);
+        sala.setCinema(cinema);  
+        cinema.addSala(sala);
+
         Sala salaSalva = salaRepository.save(sala);
+        cinema.atualizarTotalSalas();
+        cinemaRepository.save(cinema);
+
         return convertToDTO(salaSalva);
     }
 
@@ -100,6 +119,15 @@ public class SalaService {
     // Deletar sala
     public boolean deletarSala(Long id) {
         if (salaRepository.existsById(id)) {
+            Sala sala = salaRepository.findById(id).get();
+            Cinema cinema = sala.getCinema();
+            if (cinema != null) {
+                cinema.setSalas(cinema.getSalas().stream()
+                    .filter(s -> !s.getId().equals(id))
+                    .collect(Collectors.toList()));
+                cinema.setTotalSalas(cinema.getSalas().size());
+                cinemaRepository.save(cinema);
+            }
             salaRepository.deleteById(id);
             return true;
         }
@@ -120,6 +148,9 @@ public class SalaService {
     private SalaDTO convertToDTO(Sala sala) {
         SalaDTO dto = new SalaDTO();
         dto.setId(sala.getId());
+        if (sala.getCinema() != null) {
+            dto.setIdCinema(sala.getCinema().getIdCinema());
+        }
         dto.setNome(sala.getNome());
         dto.setNumeroSala(sala.getNumeroSala());
         dto.setCapacidadeTotal(sala.getCapacidadeTotal());
@@ -158,14 +189,32 @@ public class SalaService {
 
     // Atualizar dados da sala existente
     private void atualizarDadosSala(Sala sala, SalaDTO dto) {
-        if (dto.getNome() != null) sala.setNome(dto.getNome());
-        if (dto.getNumeroSala() != null) sala.setNumeroSala(dto.getNumeroSala());
-        if (dto.getCapacidadeTotal() != null) sala.setCapacidadeTotal(dto.getCapacidadeTotal());
-        if (dto.getTipoTela() != null) sala.setTipoTela(dto.getTipoTela());
-        if (dto.getTipoSom() != null) sala.setTipoSom(dto.getTipoSom());
-        if (dto.getAcessivel() != null) sala.setAcessivel(dto.getAcessivel());
-        if (dto.getArCondicionado() != null) sala.setArCondicionado(dto.getArCondicionado());
-        if (dto.getDescricao() != null) sala.setDescricao(dto.getDescricao());
-        if (dto.getAtiva() != null) sala.setAtiva(dto.getAtiva());
+        if (dto.getNome() != null) {
+            sala.setNome(dto.getNome());
+        }
+        if (dto.getNumeroSala() != null) {
+            sala.setNumeroSala(dto.getNumeroSala());
+        }
+        if (dto.getCapacidadeTotal() != null) {
+            sala.setCapacidadeTotal(dto.getCapacidadeTotal());
+        }
+        if (dto.getTipoTela() != null) {
+            sala.setTipoTela(dto.getTipoTela());
+        }
+        if (dto.getTipoSom() != null) {
+            sala.setTipoSom(dto.getTipoSom());
+        }
+        if (dto.getAcessivel() != null) {
+            sala.setAcessivel(dto.getAcessivel());
+        }
+        if (dto.getArCondicionado() != null) {
+            sala.setArCondicionado(dto.getArCondicionado());
+        }
+        if (dto.getDescricao() != null) {
+            sala.setDescricao(dto.getDescricao());
+        }
+        if (dto.getAtiva() != null) {
+            sala.setAtiva(dto.getAtiva());
+        }
     }
 }

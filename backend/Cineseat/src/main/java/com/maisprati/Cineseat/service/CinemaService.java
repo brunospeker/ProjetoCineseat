@@ -1,15 +1,17 @@
 package com.maisprati.Cineseat.service;
 
-import com.maisprati.Cineseat.dto.CinemaDTO;
-import com.maisprati.Cineseat.entities.Cinema;
-import com.maisprati.Cineseat.repositories.CinemaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.time.LocalDateTime;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.maisprati.Cineseat.dto.CinemaDTO;
+import com.maisprati.Cineseat.entities.Cinema;
+import com.maisprati.Cineseat.entities.Sala;
+import com.maisprati.Cineseat.repositories.CinemaRepository;
 
 @Service
 public class CinemaService {
@@ -71,8 +73,13 @@ public class CinemaService {
     }
 
     public CinemaDTO createCinema(Cinema cinema) {
+        if (cinema.getSalas() != null) {
+            for (Sala sala : cinema.getSalas()) {
+                sala.setCinema(cinema);
+            }
+        }
+        cinema.atualizarTotalSalas();
         cinema.setDataCriacao(LocalDateTime.now());
-        cinema.setDataAtualizacao(LocalDateTime.now());
         Cinema newCinema = cinemaRepository.save(cinema);
         return new CinemaDTO(newCinema);
     }
