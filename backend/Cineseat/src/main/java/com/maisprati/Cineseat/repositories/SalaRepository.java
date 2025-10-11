@@ -18,6 +18,10 @@ public interface SalaRepository extends JpaRepository<Sala, Long> {
     // Buscar sala por número
     Optional<Sala> findByNumeroSala(Integer numeroSala);
 
+    // Buscar sala por ID da Ingresso.com
+    Optional<Sala> findByIngressoId(String ingressoId);
+    boolean existsByIngressoId(String ingressoId);
+
     // Buscar salas por tipo de tela
     List<Sala> findByTipoTela(String tipoTela);
 

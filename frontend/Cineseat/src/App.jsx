@@ -1,57 +1,23 @@
 import React, { useState } from "react";
-import { movies } from "./data/movies";
-import Header from "./components/Header";
-import MovieList from "./components/MovieList";
-import SessionList from "./components/SessionList";
-import SeatSelection from "./components/SeatSelection";
-import Room from "./components/room";
-import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Home from "./pages/Home";
+import Login from "./pages/Login";
 
 export default function App() {
-  const [selectedCity, setSelectedCity] = useState("São Paulo");
-  const [selectedMovie, setSelectedMovie] = useState(null);
-  const [selectedSession, setSelectedSession] = useState(null);
-  const [currentView, setCurrentView] = useState("movies"); 
-
-  const renderContent = () => {
-    switch (currentView) {
-      case "rooms":
-        return <Room selectedCity={selectedCity} />;
-      case "movies":
-      default:
-        return (
-          <>
-            <MovieList movies={movies} selectMovie={setSelectedMovie} city={selectedCity} />
-            <SessionList movie={selectedMovie} selectSession={setSelectedSession} />
-            <SeatSelection session={selectedSession} />
-          </>
-        );
-    }
-  };
+  const [darkMode, setDarkMode] = useState(true);
 
   return (
-    <div>
-      <Header selectedCity={selectedCity} setSelectedCity={setSelectedCity} />
-      
-      <div className="app-nav">
-        <button 
-          onClick={() => setCurrentView('movies')}
-          className={`nav-btn ${currentView === 'movies' ? 'active' : ''}`}
-        >
-          Filmes e Sessões
-        </button>
-        <button 
-          onClick={() => setCurrentView('rooms')}
-          className={`nav-btn ${currentView === 'rooms' ? 'active' : ''}`}
-        >
-          Gerenciar Salas
-        </button>
+    <BrowserRouter>
+      <div className={darkMode ? "min-h-screen bg-black text-white" : "min-h-screen bg-white text-black"}>
+        <Routes>
+
+          <Route path="/" element={<Home darkMode={darkMode} setDarkMode={setDarkMode} />} />
+          
+          <Route path="/login" element={<Login />} />
+
+        </Routes>
       </div>
-      
-      <main style={{ padding: "20px" }}>
-        {renderContent()}
-      </main>
-    </div>
+    </BrowserRouter>
   );
 }
-

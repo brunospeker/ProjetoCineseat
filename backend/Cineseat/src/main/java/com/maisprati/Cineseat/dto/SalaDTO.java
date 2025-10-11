@@ -10,6 +10,9 @@ public class SalaDTO {
 
     private String nome;
 
+    @JsonProperty("ingresso_id")
+    private String ingressoId;
+
     @JsonProperty("numero_sala")
     private Integer numeroSala;
 
@@ -39,8 +42,7 @@ public class SalaDTO {
     private Long totalAvaliacoes;
 
     // Construtores
-    public SalaDTO() {
-    }
+    public SalaDTO() {}
 
     public SalaDTO(String nome, Integer capacidadeTotal) {
         this.nome = nome;
@@ -48,107 +50,45 @@ public class SalaDTO {
     }
 
     // Getters e Setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getIngressoId() { return ingressoId; }
+    public void setIngressoId(String ingressoId) { this.ingressoId = ingressoId; }
 
-    public Long getIdCinema() {
-        return idCinema;
-    }
+    public Long getIdCinema() { return idCinema; }
+    public void setIdCinema(Long idCinema) { this.idCinema = idCinema; }
 
-    public void setIdCinema(Long idCinema) {
-        this.idCinema = idCinema;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public String getNome() {
-        return nome;
-    }
+    public Integer getNumeroSala() { return numeroSala; }
+    public void setNumeroSala(Integer numeroSala) { this.numeroSala = numeroSala; }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public Integer getCapacidadeTotal() { return capacidadeTotal; }
+    public void setCapacidadeTotal(Integer capacidadeTotal) { this.capacidadeTotal = capacidadeTotal; }
 
-    public Integer getNumeroSala() {
-        return numeroSala;
-    }
+    public String getTipoTela() { return tipoTela; }
+    public void setTipoTela(String tipoTela) { this.tipoTela = tipoTela; }
 
-    public void setNumeroSala(Integer numeroSala) {
-        this.numeroSala = numeroSala;
-    }
+    public String getTipoSom() { return tipoSom; }
+    public void setTipoSom(String tipoSom) { this.tipoSom = tipoSom; }
 
-    public Integer getCapacidadeTotal() {
-        return capacidadeTotal;
-    }
+    public Boolean getAcessivel() { return acessivel; }
+    public void setAcessivel(Boolean acessivel) { this.acessivel = acessivel; }
 
-    public void setCapacidadeTotal(Integer capacidadeTotal) {
-        this.capacidadeTotal = capacidadeTotal;
-    }
+    public Boolean getArCondicionado() { return arCondicionado; }
+    public void setArCondicionado(Boolean arCondicionado) { this.arCondicionado = arCondicionado; }
 
-    public String getTipoTela() {
-        return tipoTela;
-    }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public void setTipoTela(String tipoTela) {
-        this.tipoTela = tipoTela;
-    }
+    public Boolean getAtiva() { return ativa; }
+    public void setAtiva(Boolean ativa) { this.ativa = ativa; }
 
-    public String getTipoSom() {
-        return tipoSom;
-    }
+    public Double getMediaAvaliacoes() { return mediaAvaliacoes; }
+    public void setMediaAvaliacoes(Double mediaAvaliacoes) { this.mediaAvaliacoes = mediaAvaliacoes; }
 
-    public void setTipoSom(String tipoSom) {
-        this.tipoSom = tipoSom;
-    }
-
-    public Boolean getAcessivel() {
-        return acessivel;
-    }
-
-    public void setAcessivel(Boolean acessivel) {
-        this.acessivel = acessivel;
-    }
-
-    public Boolean getArCondicionado() {
-        return arCondicionado;
-    }
-
-    public void setArCondicionado(Boolean arCondicionado) {
-        this.arCondicionado = arCondicionado;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public Boolean getAtiva() {
-        return ativa;
-    }
-
-    public void setAtiva(Boolean ativa) {
-        this.ativa = ativa;
-    }
-
-    public Double getMediaAvaliacoes() {
-        return mediaAvaliacoes;
-    }
-
-    public void setMediaAvaliacoes(Double mediaAvaliacoes) {
-        this.mediaAvaliacoes = mediaAvaliacoes;
-    }
-
-    public Long getTotalAvaliacoes() {
-        return totalAvaliacoes;
-    }
-
-    public void setTotalAvaliacoes(Long totalAvaliacoes) {
-        this.totalAvaliacoes = totalAvaliacoes;
-    }
+    public Long getTotalAvaliacoes() { return totalAvaliacoes; }
+    public void setTotalAvaliacoes(Long totalAvaliacoes) { this.totalAvaliacoes = totalAvaliacoes; }
 }

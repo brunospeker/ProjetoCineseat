@@ -1,19 +1,20 @@
 package com.maisprati.Cineseat.service;
 
+import com.maisprati.Cineseat.dto.SalaDTO;
+import com.maisprati.Cineseat.entities.Sala;
+import com.maisprati.Cineseat.repositories.SalaRepository;
+import com.maisprati.Cineseat.repositories.SalaAvaliacaoRepository;
+import com.maisprati.Cineseat.entities.Cinema;
+import com.maisprati.Cineseat.repositories.CinemaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.maisprati.Cineseat.dto.SalaDTO;
 import com.maisprati.Cineseat.entities.Cinema;
-import com.maisprati.Cineseat.entities.Sala;
 import com.maisprati.Cineseat.repositories.CinemaRepository;
-import com.maisprati.Cineseat.repositories.SalaAvaliacaoRepository;
-import com.maisprati.Cineseat.repositories.SalaRepository;
-
 @Service
 public class SalaService {
 
@@ -45,6 +46,12 @@ public class SalaService {
     // Buscar sala por ID
     public Optional<SalaDTO> buscarSalaPorId(Long id) {
         return salaRepository.findById(id)
+                .map(this::convertToDTO);
+    }
+
+    // Buscar sala por ID da Ingresso.com
+    public Optional<SalaDTO> buscarPorIngressoId(String ingressoId) {
+        return salaRepository.findByIngressoId(ingressoId)
                 .map(this::convertToDTO);
     }
 
@@ -96,7 +103,7 @@ public class SalaService {
                 .orElseThrow(() -> new RuntimeException("Cinema não encontrado"));
 
         Sala sala = convertToEntity(salaDTO);
-        sala.setCinema(cinema);  
+        sala.setCinema(cinema);
         cinema.addSala(sala);
 
         Sala salaSalva = salaRepository.save(sala);
@@ -151,6 +158,7 @@ public class SalaService {
         if (sala.getCinema() != null) {
             dto.setIdCinema(sala.getCinema().getIdCinema());
         }
+        dto.setIngressoId(sala.getIngressoId());
         dto.setNome(sala.getNome());
         dto.setNumeroSala(sala.getNumeroSala());
         dto.setCapacidadeTotal(sala.getCapacidadeTotal());
@@ -175,6 +183,7 @@ public class SalaService {
     private Sala convertToEntity(SalaDTO dto) {
         Sala sala = new Sala();
         sala.setId(dto.getId());
+        sala.setIngressoId(dto.getIngressoId());
         sala.setNome(dto.getNome());
         sala.setNumeroSala(dto.getNumeroSala());
         sala.setCapacidadeTotal(dto.getCapacidadeTotal());
@@ -189,32 +198,15 @@ public class SalaService {
 
     // Atualizar dados da sala existente
     private void atualizarDadosSala(Sala sala, SalaDTO dto) {
-        if (dto.getNome() != null) {
-            sala.setNome(dto.getNome());
-        }
-        if (dto.getNumeroSala() != null) {
-            sala.setNumeroSala(dto.getNumeroSala());
-        }
-        if (dto.getCapacidadeTotal() != null) {
-            sala.setCapacidadeTotal(dto.getCapacidadeTotal());
-        }
-        if (dto.getTipoTela() != null) {
-            sala.setTipoTela(dto.getTipoTela());
-        }
-        if (dto.getTipoSom() != null) {
-            sala.setTipoSom(dto.getTipoSom());
-        }
-        if (dto.getAcessivel() != null) {
-            sala.setAcessivel(dto.getAcessivel());
-        }
-        if (dto.getArCondicionado() != null) {
-            sala.setArCondicionado(dto.getArCondicionado());
-        }
-        if (dto.getDescricao() != null) {
-            sala.setDescricao(dto.getDescricao());
-        }
-        if (dto.getAtiva() != null) {
-            sala.setAtiva(dto.getAtiva());
-        }
+        if (dto.getIngressoId() != null) sala.setIngressoId(dto.getIngressoId());
+        if (dto.getNome() != null) sala.setNome(dto.getNome());
+        if (dto.getNumeroSala() != null) sala.setNumeroSala(dto.getNumeroSala());
+        if (dto.getCapacidadeTotal() != null) sala.setCapacidadeTotal(dto.getCapacidadeTotal());
+        if (dto.getTipoTela() != null) sala.setTipoTela(dto.getTipoTela());
+        if (dto.getTipoSom() != null) sala.setTipoSom(dto.getTipoSom());
+        if (dto.getAcessivel() != null) sala.setAcessivel(dto.getAcessivel());
+        if (dto.getArCondicionado() != null) sala.setArCondicionado(dto.getArCondicionado());
+        if (dto.getDescricao() != null) sala.setDescricao(dto.getDescricao());
+        if (dto.getAtiva() != null) sala.setAtiva(dto.getAtiva());
     }
 }

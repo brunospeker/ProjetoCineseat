@@ -3,7 +3,6 @@ package com.maisprati.Cineseat.entities;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "filmes")

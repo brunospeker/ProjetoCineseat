@@ -40,6 +40,34 @@ public class SalaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // POST /api/salas - Criar nova sala
+    @PostMapping
+    public ResponseEntity<SalaDTO> criarSala(@RequestBody SalaDTO salaDTO) {
+        try {
+            // Verificar se já existe sala com esse ingresso_id
+            if (salaDTO.getIngressoId() != null) {
+                Optional<SalaDTO> salaExistente = salaService.buscarPorIngressoId(salaDTO.getIngressoId());
+                if (salaExistente.isPresent()) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT)
+                            .body(null); // Ou retornar uma mensagem de erro
+                }
+            }
+
+            SalaDTO salaCriada = salaService.salvarSala(salaDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(salaCriada);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    // GET /api/salas/ingresso/{ingressoId}
+    @GetMapping("/ingresso/{ingressoId}")
+    public ResponseEntity<SalaDTO> buscarPorIngressoId(@PathVariable String ingressoId) {
+        Optional<SalaDTO> sala = salaService.buscarPorIngressoId(ingressoId);
+        return sala.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     // GET /api/salas/numero/{numeroSala} - Buscar sala por número
     @GetMapping("/numero/{numeroSala}")
     public ResponseEntity<SalaDTO> buscarSalaPorNumero(@PathVariable Integer numeroSala) {
@@ -76,16 +104,6 @@ public class SalaController {
         return ResponseEntity.ok(salas);
     }
 
-    // POST /api/salas - Criar nova sala
-    @PostMapping
-    public ResponseEntity<SalaDTO> criarSala(@RequestBody SalaDTO salaDTO) {
-        try {
-            SalaDTO salaCriada = salaService.salvarSala(salaDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(salaCriada);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
 
     // PUT /api/salas/{id} - Atualizar sala
     @PutMapping("/{id}")

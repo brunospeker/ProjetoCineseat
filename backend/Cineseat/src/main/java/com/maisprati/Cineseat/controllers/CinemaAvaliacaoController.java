@@ -47,13 +47,13 @@ public class CinemaAvaliacaoController {
     }
 
     @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesByNotaGeral(@PathVariable("usuarioId") Long idUsuario) {
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesByUsuario(@PathVariable("usuarioId") Long idUsuario) {
         List<CinemaAvaliacaoDTO> avaliacoes = avaliacaoService.findByUsuarioId(idUsuario);
         return ResponseEntity.ok(avaliacoes);
     }
 
     @GetMapping("/notaGeral/{notaGeral}")
-    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesByUsuario(@PathVariable("notaGeral") Integer notaGeral) {
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesByNotaGeral(@PathVariable("notaGeral") Integer notaGeral) {
         List<CinemaAvaliacaoDTO> avaliacoes = avaliacaoService.findByNotaGeral(notaGeral);
         return ResponseEntity.ok(avaliacoes);
     }

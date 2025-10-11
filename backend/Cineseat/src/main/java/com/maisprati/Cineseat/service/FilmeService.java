@@ -1,26 +1,21 @@
 package com.maisprati.Cineseat.service;
 
-import com.maisprati.Cineseat.dto.FilmeDTO;
-import com.maisprati.Cineseat.entities.Filme;
-import com.maisprati.Cineseat.repositories.FilmeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.maisprati.Cineseat.dto.FilmeDTO;
+import com.maisprati.Cineseat.entities.Filme;
+import com.maisprati.Cineseat.repositories.FilmeRepository;
 
 @Service
 public class FilmeService {
 
     @Autowired
     private FilmeRepository filmeRepository;
-
-    @Autowired
-    private RestTemplate restTemplate;
-
-    private static final String INGRESSO_API_BASE_URL = "https://api-content.ingresso.com";
 
     // Buscar todos os filmes
     public List<FilmeDTO> buscarTodosFilmes() {
@@ -90,24 +85,6 @@ public class FilmeService {
             return true;
         }
         return false;
-    }
-
-    // Sincronizar com a API da Ingresso.com (exemplo básico)
-    public void sincronizarComIngressoAPI() {
-        try {
-            // Este é um exemplo básico - você precisará ajustar conforme a documentação da API
-            String url = INGRESSO_API_BASE_URL + "/v1/movies";
-
-            // Aqui você faria a chamada para a API da Ingresso.com
-            // FilmeDTO[] filmesAPI = restTemplate.getForObject(url, FilmeDTO[].class);
-
-            // Para cada filme retornado pela API, verificar se já existe no banco
-            // Se não existir, criar novo registro
-            // Se existir, atualizar os dados
-
-        } catch (Exception e) {
-            System.err.println("Erro ao sincronizar com a API da Ingresso.com: " + e.getMessage());
-        }
     }
 
     // Converter Entity para DTO
