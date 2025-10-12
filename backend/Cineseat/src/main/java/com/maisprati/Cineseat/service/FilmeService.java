@@ -1,14 +1,15 @@
 package com.maisprati.Cineseat.service;
 
-import com.maisprati.Cineseat.dto.FilmeDTO;
-import com.maisprati.Cineseat.entities.Filme;
-import com.maisprati.Cineseat.repositories.FilmeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.maisprati.Cineseat.dto.FilmeDTO;
+import com.maisprati.Cineseat.entities.Filme;
+import com.maisprati.Cineseat.repositories.FilmeRepository;
 
 @Service
 public class FilmeService {

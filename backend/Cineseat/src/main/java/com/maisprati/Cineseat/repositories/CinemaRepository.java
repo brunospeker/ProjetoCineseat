@@ -7,12 +7,13 @@ import java.util.List;
 
 @Repository
 public interface CinemaRepository extends JpaRepository<Cinema, Long> {
-    List<Cinema> findByCityName(String cityName);
-    List<Cinema> findByState(String state);
-    List<Cinema> findByAddress(String address);
-    List<Cinema> findByEnableTrue();
-    List<Cinema> findByHasBomboniereTrue();
-    List<Cinema> findByCorporation(String corporation);
-    List<Cinema> findByTotalRooms(Integer rooms);
-}
+    List<Cinema> findByCidadeContainingIgnoreCase(String cidade);
+    List<Cinema> findByEstadoContainingIgnoreCase(String estado);
+    List<Cinema> findByBairroContainingIgnoreCase(String bairro);
 
+    List<Cinema> findAllByAtivoTrue();
+    List<Cinema> findAllByTemBomboniereTrue();
+
+    List<Cinema> findByTotalSalas(Integer totalSalas);
+    List<Cinema> findByTotalSalasGreaterThanEqual(Integer totalSalas);
+}

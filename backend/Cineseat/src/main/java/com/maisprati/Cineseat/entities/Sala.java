@@ -51,7 +51,7 @@ public class Sala {
 
     // Relacionamento com cinema
     @ManyToOne
-    @JoinColumn(name = "cinema_id")
+    @JoinColumn(name = "id_cinema")
     private Cinema cinema;
 
     // Construtores

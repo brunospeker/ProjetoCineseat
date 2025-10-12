@@ -1,203 +1,253 @@
 package com.maisprati.Cineseat.entities;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table (name = "cinemas")
+@Table(name = "cinemas")
 public class Cinema {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idCinema;
 
     @Column(nullable = false)
-    private String name;
+    private String nomeCinema;
 
     private String site;
-
-    @Column(nullable = false)
     private String cnpj;
 
     @Column(nullable = false)
-    private String state;
+    private String estado;
     private String uf;
 
     @Column(nullable = false)
-    private String cityName;
-    private String cityId;
+    private String cidade;
+    private String idCidade;
 
-    private String address;
-    private String addressComplement;
-    private String neighborhood;
-    private String number;
+    private String bairro;
+    private String numero;
+    private String imagensJson;
+    private Boolean temBomboniere;
 
-    @Column(columnDefinition = "TEXT")
-    private String imagesJson;
+    @Column(name = "total_salas")
+    private Integer totalSalas;
 
-    private Boolean hasBomboniere;
-    private Boolean hasSession;
-    private Boolean hasSeatDistancePolicy;
-    private Boolean hasSeatDistancePolicyArena;
+    @Column(name = "data_criacao", nullable = false)
+    private LocalDateTime dataCriacao;
 
-    @ElementCollection
-    @CollectionTable(name = "cinema_delivery_types", joinColumns = @JoinColumn(name = "cinema_id"))
-    @Column(name = "delivery_type")
-    private List<String> deliveryType = new ArrayList<>();
+    @Column(name = "data_atualizacao", nullable = false)
+    private LocalDateTime dataAtualizacao;
 
-    private String corporation;
-    private String corporationId;
-
-    @Column(columnDefinition = "TEXT")
-    private String operationPoliciesJson;
-
-    @Column(name = "total_rooms")
-    private Integer totalRooms;
-
-    @Column(name = "date_creation", nullable = false)
-    private LocalDateTime dateCreation;
-
-    @Column(name = "update_date", nullable = false)
-    private LocalDateTime updateDate;
-
-    @Column(nullable = false)
-    private Boolean enable;
+    private Boolean ativo;
 
     @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Sala> salas;
 
-//    @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<CinemaAvaliacao> reviews;
+    @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CinemaAvaliacao> avaliacoes;
 
-    public Cinema(){}
+    public Cinema() {
+    }
 
-    public Cinema(Long id, String name, String site, String cnpj, String state, String uf,
-                  String cityName, String cityId, String address, String addressComplement,
-                  String neighborhood, String number, String imagesJson,
-                  Boolean hasBomboniere, Boolean hasSession, Boolean hasSeatDistancePolicy,
-                  Boolean hasSeatDistancePolicyArena, List<String> deliveryType,
-                  String corporation, String corporationId, String operationPoliciesJson,
-                  Integer totalRooms, Boolean enable) {
-        this.id = id;
-        this.name = name;
+    public Cinema(Long idCinema, String nomeCinema, String site, String cnpj, String estado, String uf,
+            String cidade, String idCidade, String bairro, String numero,
+            String imagensJson, Boolean temBomboniere, List<Sala> salas, Boolean ativo) {
+        this.idCinema = idCinema;
+        this.nomeCinema = nomeCinema;
         this.site = site;
         this.cnpj = cnpj;
-        this.state = state;
+        this.estado = estado;
         this.uf = uf;
-        this.cityName = cityName;
-        this.cityId = cityId;
-        this.address = address;
-        this.addressComplement = addressComplement;
-        this.neighborhood = neighborhood;
-        this.number = number;
-        this.imagesJson = imagesJson;
-        this.hasBomboniere = hasBomboniere;
-        this.hasSession = hasSession;
-        this.hasSeatDistancePolicy = hasSeatDistancePolicy;
-        this.hasSeatDistancePolicyArena = hasSeatDistancePolicyArena;
-        this.deliveryType = deliveryType;
-        this.corporation = corporation;
-        this.corporationId = corporationId;
-        this.operationPoliciesJson = operationPoliciesJson;
-        this.totalRooms = totalRooms;
-        this.enable = enable;
+        this.cidade = cidade;
+        this.idCidade = idCidade;
+        this.bairro = bairro;
+        this.numero = numero;
+        this.imagensJson = imagensJson;
+        this.temBomboniere = temBomboniere;
+        this.salas = salas;
+        this.totalSalas = (salas != null) ? salas.size() : 0;
+        this.ativo = ativo;
     }
-
 
     @PrePersist
-    public void prePersist() {
-        this.dateCreation = LocalDateTime.now();
-        this.updateDate = LocalDateTime.now();
-        this.enable = true;
+    @PreUpdate
+    public void atualizarDadosAutomaticos() {
+        atualizarTotalSalas();
+        this.dataAtualizacao = LocalDateTime.now();
+        if (this.dataCriacao == null) {
+            this.dataCriacao = LocalDateTime.now();
+        }
+        if (this.ativo == null) {
+            this.ativo = true;
+        }
     }
 
-    @PreUpdate
-    public void preUpdate() {this.updateDate = LocalDateTime.now();}
+    public void atualizarTotalSalas() {
+        this.totalSalas = (this.salas != null) ? this.salas.size() : 0;
+    }
 
-    public Long getId() {return id;}
-    public void setId(Long id) {this.id = id;}
+    public Long getIdCinema() {
+        return idCinema;
+    }
 
-    public String getName() {return name;}
-    public void setName(String name) {this.name = name;}
+    public void setIdCinema(Long idCinema) {
+        this.idCinema = idCinema;
+    }
 
-    public String getSite() {return site;}
-    public void setSite(String site) {this.site = site;}
+    public String getNomeCinema() {
+        return nomeCinema;
+    }
 
-    public String getCnpj() {return cnpj;}
-    public void setCnpj(String cnpj) {this.cnpj = cnpj;}
+    public void setNomeCinema(String nomeCinema) {
+        this.nomeCinema = nomeCinema;
+    }
 
-    public String getState() {return state;}
-    public void setState(String state) {this.state = state;}
+    public String getSite() {
+        return site;
+    }
 
-    public String getUf() {return uf;}
-    public void setUf(String uf) {this.uf = uf;}
+    public void setSite(String site) {
+        this.site = site;
+    }
 
-    public String getCityName() {return cityName;}
-    public void setCityName(String cityName) {this.cityName = cityName;}
+    public String getCnpj() {
+        return cnpj;
+    }
 
-    public String getCityId() {return cityId;}
-    public void setCityId(String cityId) {this.cityId = cityId;}
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
+    }
 
-    public String getAddress() {return address;}
-    public void setAddress(String address) {this.address = address;}
+    public String getEstado() {
+        return estado;
+    }
 
-    public String getAddressComplement() {return addressComplement;}
-    public void setAddressComplement(String addressComplement) {this.addressComplement = addressComplement;}
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
-    public String getNeighborhood() {return neighborhood;}
-    public void setNeighborhood(String neighborhood) {this.neighborhood = neighborhood;}
+    public String getUf() {
+        return uf;
+    }
 
-    public String getNumber() {return number;}
-    public void setNumber(String number) {this.number = number;}
+    public void setUf(String uf) {
+        this.uf = uf;
+    }
 
-    public String getImagesJson() {return imagesJson;}
-    public void setImagesJson(String imagesJson) {this.imagesJson = imagesJson;}
+    public String getCidade() {
+        return cidade;
+    }
 
-    public Boolean getHasBomboniere() {return hasBomboniere;}
-    public void setHasBomboniere(Boolean hasBomboniere) {this.hasBomboniere = hasBomboniere;}
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
 
-    public Boolean getHasSession() {return hasSession;}
-    public void setHasSession(Boolean hasSession) {this.hasSession = hasSession;}
+    public String getIdCidade() {
+        return idCidade;
+    }
 
-    public Boolean getHasSeatDistancePolicy() {return hasSeatDistancePolicy;}
-    public void setHasSeatDistancePolicy(Boolean hasSeatDistancePolicy) {this.hasSeatDistancePolicy = hasSeatDistancePolicy;}
+    public void setIdCidade(String idCidade) {
+        this.idCidade = idCidade;
+    }
 
-    public Boolean getHasSeatDistancePolicyArena() {return hasSeatDistancePolicyArena;}
-    public void setHasSeatDistancePolicyArena(Boolean hasSeatDistancePolicyArena) {this.hasSeatDistancePolicyArena = hasSeatDistancePolicyArena;}
+    public String getBairro() {
+        return bairro;
+    }
 
-    public List<String> getDeliveryType() {return deliveryType;}
-    public void setDeliveryType(List<String> deliveryType) {this.deliveryType = deliveryType;}
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
+    }
 
-    public String getCorporation() {return corporation;}
-    public void setCorporation(String corporation) {this.corporation = corporation;}
+    public String getNumero() {
+        return numero;
+    }
 
-    public String getCorporationId() {return corporationId;}
-    public void setCorporationId(String corporationId) {this.corporationId = corporationId;}
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
 
-    public String getOperationPoliciesJson() {return operationPoliciesJson;}
-    public void setOperationPoliciesJson(String operationPoliciesJson) {this.operationPoliciesJson = operationPoliciesJson;}
+    public String getImagensJson() {
+        return imagensJson;
+    }
 
-    public Integer getTotalRooms() {return totalRooms;}
-    public void setTotalRooms(Integer totalRooms) {this.totalRooms = totalRooms;}
+    public void setImagensJson(String imagensJson) {
+        this.imagensJson = imagensJson;
+    }
 
-    public LocalDateTime getDateCreation() {return dateCreation;}
-    private void setDateCreation(LocalDateTime dateCreation) {this.dateCreation = dateCreation;}
+    public Boolean getTemBomboniere() {
+        return temBomboniere;
+    }
 
-    public LocalDateTime getUpdateDate() {return updateDate;}
-    public void setUpdateDate(LocalDateTime updateDate) {this.updateDate = updateDate;}
+    public void setTemBomboniere(Boolean temBomboniere) {
+        this.temBomboniere = temBomboniere;
+    }
 
-    public Boolean getEnable() {return enable;}
-    public void setEnable(Boolean enable) {this.enable = enable;}
+    public int getTotalSalas() {
+        return totalSalas != null ? totalSalas.intValue() : 0;
+    }
 
-    public List<Sala> getSalas() {return salas;}
-    public void setSalas(List<Sala> salas) {this.salas = salas;}
+    public void setTotalSalas(Integer totalSalas) {
+        this.totalSalas = totalSalas;
+    }
 
-//    public List<CinemaAvaliacao> getReviews() {
-//        return reviews;
-//    }
-//    public void setReviews(List<CinemaAvaliacao> reviews) {
-//        this.reviews = reviews;
-//    }
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public List<Sala> getSalas() {
+        return salas;
+    }
+
+    public void setSalas(List<Sala> salas) {
+        this.salas = salas;
+        this.totalSalas = (salas != null) ? salas.size() : 0;
+    }
+
+    public void addSala(Sala sala) {
+        if (salas == null) {
+            salas = new ArrayList<>();
+        }
+        salas.add(sala);
+        sala.setCinema(this);
+        atualizarTotalSalas();
+    }
+
+    public void removeSala(Sala sala) {
+        if (this.salas != null) {
+            this.salas.remove(sala);
+            this.totalSalas = this.salas.size();
+        }
+    }
+
+    public List<CinemaAvaliacao> getAvaliacoes() {
+        return avaliacoes;
+    }
+
+    public void setAvaliacoes(List<CinemaAvaliacao> avaliacoes) {
+        this.avaliacoes = avaliacoes;
+    }
+
 }

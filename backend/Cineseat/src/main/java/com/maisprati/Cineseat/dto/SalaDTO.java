@@ -6,6 +6,8 @@ public class SalaDTO {
 
     private Long id;
 
+    private Long idCinema;
+
     private String nome;
 
     @JsonProperty("ingresso_id")
@@ -53,6 +55,9 @@ public class SalaDTO {
 
     public String getIngressoId() { return ingressoId; }
     public void setIngressoId(String ingressoId) { this.ingressoId = ingressoId; }
+
+    public Long getIdCinema() { return idCinema; }
+    public void setIdCinema(Long idCinema) { this.idCinema = idCinema; }
 
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
