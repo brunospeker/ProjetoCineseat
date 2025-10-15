@@ -183,8 +183,8 @@ public class SalaAvaliacaoService {
     // Converter Entity para DTO
     private SalaAvaliacaoDTO convertToDTO(SalaAvaliacao avaliacao) {
         SalaAvaliacaoDTO dto = new SalaAvaliacaoDTO();
-        dto.setId(avaliacao.getId());
-        dto.setSalaId(avaliacao.getSala().getId());
+        dto.setId(avaliacao.getIdSalaAvaliacao());
+        dto.setSalaId(avaliacao.getSala().getIdSala());
         dto.setSalaNome(avaliacao.getSala().getNome());
         dto.setUsuarioId(avaliacao.getUsuario().getId());
         dto.setUsuarioNome(avaliacao.getUsuario().getUsername());

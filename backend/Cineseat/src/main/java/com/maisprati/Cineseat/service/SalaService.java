@@ -130,7 +130,7 @@ public class SalaService {
             Cinema cinema = sala.getCinema();
             if (cinema != null) {
                 cinema.setSalas(cinema.getSalas().stream()
-                    .filter(s -> !s.getId().equals(id))
+                    .filter(s -> !s.getIdSala().equals(id))
                     .collect(Collectors.toList()));
                 cinema.setTotalSalas(cinema.getSalas().size());
                 cinemaRepository.save(cinema);
@@ -154,7 +154,7 @@ public class SalaService {
     // Converter Entity para DTO
     private SalaDTO convertToDTO(Sala sala) {
         SalaDTO dto = new SalaDTO();
-        dto.setId(sala.getId());
+        dto.setId(sala.getIdSala());
         if (sala.getCinema() != null) {
             dto.setIdCinema(sala.getCinema().getIdCinema());
         }
@@ -182,7 +182,7 @@ public class SalaService {
     // Converter DTO para Entity
     private Sala convertToEntity(SalaDTO dto) {
         Sala sala = new Sala();
-        sala.setId(dto.getId());
+        sala.setIdSala(dto.getId());
         sala.setIngressoId(dto.getIngressoId());
         sala.setNome(dto.getNome());
         sala.setNumeroSala(dto.getNumeroSala());

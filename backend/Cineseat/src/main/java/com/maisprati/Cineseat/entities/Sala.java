@@ -10,7 +10,7 @@ public class Sala {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idSala;
 
     @Column(name = "ingresso_id", unique = true)
     private String ingressoId;
@@ -67,11 +67,11 @@ public class Sala {
     }
 
     // Getters e Setters
-    public Long getId() {
-        return id;
+    public Long getIdSala() {
+        return idSala;
     }
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdSala(Long id) {
+        this.idSala= idSala;
     }
 
     public String getIngressoId() { return ingressoId; }

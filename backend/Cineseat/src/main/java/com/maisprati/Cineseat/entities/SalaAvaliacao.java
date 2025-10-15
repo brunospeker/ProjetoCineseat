@@ -9,7 +9,7 @@ public class SalaAvaliacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idSalaAvaliacao;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sala_id", nullable = false)
@@ -75,12 +75,12 @@ public class SalaAvaliacao {
     }
 
     // Getters e Setters
-    public Long getId() {
-        return id;
+    public Long getIdSalaAvaliacao() {
+        return idSalaAvaliacao;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdSalaAvaliacao(Long idSalaAvaliacao) {
+        this.idSalaAvaliacao = idSalaAvaliacao;
     }
 
     public Sala getSala() {
