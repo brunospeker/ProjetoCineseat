@@ -9,7 +9,7 @@ public class FilmeAvaliacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idFilmeAvaliacao;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "filme_id", nullable = false)
@@ -59,12 +59,12 @@ public class FilmeAvaliacao {
     }
 
     // Getters e Setters
-    public Long getId() {
-        return id;
+    public Long getIdFilmeAvaliacao() {
+        return idFilmeAvaliacao;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdFilmeAvaliacao(Long idFilmeAvaliacao) {
+        this.idFilmeAvaliacao = idFilmeAvaliacao;
     }
 
     public Filme getFilme() {

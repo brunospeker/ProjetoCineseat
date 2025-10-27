@@ -192,7 +192,7 @@ public class FilmeAvaliacaoService {
     // Converter Entity para DTO
     private FilmeAvaliacaoDTO convertToDTO(FilmeAvaliacao avaliacao) {
         FilmeAvaliacaoDTO dto = new FilmeAvaliacaoDTO();
-        dto.setId(avaliacao.getId());
+        dto.setId(avaliacao.getIdFilmeAvaliacao());
         dto.setFilmeId(avaliacao.getFilme().getId());
         dto.setFilmeTitulo(avaliacao.getFilme().getTitulo());
         dto.setUsuarioId(avaliacao.getUsuario().getId());
