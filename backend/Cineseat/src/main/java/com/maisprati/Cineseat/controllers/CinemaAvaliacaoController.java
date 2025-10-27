@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.maisprati.Cineseat.dto.CinemaAvaliacaoDTO;
-import com.maisprati.Cineseat.entities.Cinema;
-import com.maisprati.Cineseat.entities.CinemaAvaliacao;
-import com.maisprati.Cineseat.entities.User;
 import com.maisprati.Cineseat.service.CinemaAvaliacaoService;
 
 @RestController
@@ -34,102 +31,119 @@ public class CinemaAvaliacaoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CinemaAvaliacaoDTO> getAvaliacaoById(@PathVariable("id") Long idAvaliacaoCinema) {
-        Optional<CinemaAvaliacaoDTO> avaliacao = avaliacaoService.findById(idAvaliacaoCinema);
-        return avaliacao.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<CinemaAvaliacaoDTO> getAvaliacaoById(@PathVariable Long id) {
+        Optional<CinemaAvaliacaoDTO> avaliacao = avaliacaoService.findById(id);
+        return avaliacao.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/cinema/{cinemaId}")
-    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesByCinema(@PathVariable("cinemaId") Long idCinema) {
-        List<CinemaAvaliacaoDTO> avaliacoes = avaliacaoService.findByCinemaId(idCinema);
-        return ResponseEntity.ok(avaliacoes);
-    }
-
-    @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesByUsuario(@PathVariable("usuarioId") Long idUsuario) {
-        List<CinemaAvaliacaoDTO> avaliacoes = avaliacaoService.findByUsuarioId(idUsuario);
+    @GetMapping("/cinema/{idCinema}")
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesByCinema(@PathVariable Long idCinema) {
+        List<CinemaAvaliacaoDTO> avaliacoes = avaliacaoService.findByCinema(idCinema);
         return ResponseEntity.ok(avaliacoes);
     }
 
-    @GetMapping("/notaGeral/{notaGeral}")
-    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesByNotaGeral(@PathVariable("notaGeral") Integer notaGeral) {
-        List<CinemaAvaliacaoDTO> avaliacoes = avaliacaoService.findByNotaGeral(notaGeral);
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesByUsuario(@PathVariable Long idUsuario) {
+        List<CinemaAvaliacaoDTO> avaliacoes = avaliacaoService.findByUsuario(idUsuario);
         return ResponseEntity.ok(avaliacoes);
     }
 
-    @GetMapping("/notaLimpeza/{notaLimpeza}")
-    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesByNotaLimpeza(@PathVariable("notaLimpeza") Integer notaLimpeza) {
-        List<CinemaAvaliacaoDTO> avaliacoes = avaliacaoService.findByNotaLimpeza(notaLimpeza);
+    @GetMapping("/usuario/{idUsuario}/cinema/{idCinema}")
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesByUsuarioAndCinema(
+            @PathVariable Long idUsuario,
+            @PathVariable Long idCinema) {
+        List<CinemaAvaliacaoDTO> avaliacoes = avaliacaoService.findByUsuarioAndCinema(idUsuario, idCinema);
+        return avaliacoes.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(avaliacoes);
+    }
+
+    @GetMapping("/cinema/{idCinema}/comentarios")
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesComComentario(@PathVariable Long idCinema) {
+        List<CinemaAvaliacaoDTO> avaliacoes = avaliacaoService.findByCinemaWithComentario(idCinema);
+        return avaliacoes.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(avaliacoes);
+    }
+
+    @GetMapping("/notaGeral/{nota}")
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getByNotaGeral(@PathVariable Integer nota) {
+        return ResponseEntity.ok(avaliacaoService.findByNotaGeral(nota));
+    }
+
+    @GetMapping("/notaLimpeza/{nota}")
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getByNotaLimpeza(@PathVariable Integer nota) {
+        return ResponseEntity.ok(avaliacaoService.findByNotaLimpeza(nota));
+    }
+
+    @GetMapping("/notaPreco/{nota}")
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getByNotaPreco(@PathVariable Integer nota) {
+        return ResponseEntity.ok(avaliacaoService.findByNotaPreco(nota));
+    }
+
+    @GetMapping("/notaAlimentacao/{nota}")
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getByNotaAlimentacao(@PathVariable Integer nota) {
+        return ResponseEntity.ok(avaliacaoService.findByNotaAlimentacao(nota));
+    }
+
+    @GetMapping("/notaAtendimento/{nota}")
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getByNotaAtendimento(@PathVariable Integer nota) {
+        return ResponseEntity.ok(avaliacaoService.findByNotaAtendimento(nota));
+    }
+
+    @GetMapping("/count/cinema/{idCinema}")
+    public ResponseEntity<Long> countByCinema(@PathVariable Long idCinema) {
+        return ResponseEntity.ok(avaliacaoService.countByCinema(idCinema));
+    }
+
+    @GetMapping("/count/usuario/{idUsuario}")
+    public ResponseEntity<Long> countByUsuario(@PathVariable Long idUsuario) {
+        return ResponseEntity.ok(avaliacaoService.countByUsuario(idUsuario));
+    }
+
+    @GetMapping("/recentes/{idCinema}")
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesRecentes(@PathVariable Long idCinema) {
+        List<CinemaAvaliacaoDTO> avaliacoes = avaliacaoService.findAvaliacoesRecentes(idCinema);
         return ResponseEntity.ok(avaliacoes);
     }
 
-    @GetMapping("/notaPreco/{notaPreco}")
-    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesByNotaPreco(@PathVariable("notaPreco") Integer notaPreco) {
-        List<CinemaAvaliacaoDTO> avaliacoes = avaliacaoService.findByNotaPreco(notaPreco);
-        return ResponseEntity.ok(avaliacoes);
+    @GetMapping("/medias/{idCinema}")
+    public ResponseEntity<Optional<CinemaAvaliacaoDTO>> getAverageScore(@PathVariable Long idCinema) {
+        Optional<CinemaAvaliacaoDTO> medias = avaliacaoService.findAverageRatingsByCinemaId(idCinema);
+        return ResponseEntity.ok(medias);
     }
 
-    @GetMapping("/notaAlimentacao/{notaAlimentacao}")
-    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesByNotaAlimentacao(@PathVariable("notaAlimentacao") Integer notaAlimentacao) {
-        List<CinemaAvaliacaoDTO> avaliacoes = avaliacaoService.findByNotaAlimentacao(notaAlimentacao);
-        return ResponseEntity.ok(avaliacoes);
+    @GetMapping("/ranking")
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getRankingByHighestNotes() {
+        List<CinemaAvaliacaoDTO> ranking = avaliacaoService.rankingByAverageScore();
+        return ResponseEntity.ok(ranking);
     }
-    
-    @GetMapping("/notaAtendimento/{notaAtendimento}")
-    public ResponseEntity<List<CinemaAvaliacaoDTO>> getAvaliacoesByNotAtendimento(@PathVariable("notaAtendimento") Integer notaAtendimento) {
-        List<CinemaAvaliacaoDTO> avaliacoes = avaliacaoService.findByNotaAtendimento(notaAtendimento);
-        return ResponseEntity.ok(avaliacoes);
+
+    @GetMapping("/ranking/cidade/{cidade}")
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getRankingByCidade(@PathVariable String cidade) {
+        List<CinemaAvaliacaoDTO> ranking = avaliacaoService.rankingByCity(cidade);
+        return ResponseEntity.ok(ranking);
+    }
+
+    @GetMapping("/ranking/estado/{estado}")
+    public ResponseEntity<List<CinemaAvaliacaoDTO>> getRankingByEstado(@PathVariable String estado) {
+        List<CinemaAvaliacaoDTO> ranking = avaliacaoService.rankingByState(estado);
+        return ResponseEntity.ok(ranking);
     }
 
     @PostMapping
-    public ResponseEntity<CinemaAvaliacaoDTO> createAvaliacaoCinema(@RequestBody CinemaAvaliacaoDTO avaliacaoDTO) {
-        CinemaAvaliacao avaliacao = new CinemaAvaliacao();
-
-        Cinema cinema = new Cinema();
-        cinema.setIdCinema(avaliacaoDTO.getIdCinema());
-        avaliacao.setCinema(cinema);
-
-        User usuario = new User();
-        usuario.setId(avaliacaoDTO.getIdUsuario());
-        avaliacao.setUsuario(usuario);
-
-        if (avaliacaoDTO.getNotaGeral() != null) {
-            avaliacao.setNotaGeral(avaliacaoDTO.getNotaGeral());
-        }
-        if (avaliacaoDTO.getNotaLimpeza() != null) {
-            avaliacao.setNotaLimpeza(avaliacaoDTO.getNotaLimpeza());
-        }
-        if (avaliacaoDTO.getNotaAtendimento() != null) {
-            avaliacao.setNotaAtendimento(avaliacaoDTO.getNotaAtendimento());
-        }
-        if (avaliacaoDTO.getNotaPreco() != null) {
-            avaliacao.setNotaPreco(avaliacaoDTO.getNotaPreco());
-        }
-        if (avaliacaoDTO.getNotaAlimentacao() != null) {
-            avaliacao.setNotaAlimentacao(avaliacaoDTO.getNotaAlimentacao());
-        }
-        if (avaliacaoDTO.getComentario() != null) {
-            avaliacao.setComentario(avaliacaoDTO.getComentario());
-        }
-
-        CinemaAvaliacaoDTO dto = avaliacaoService.createAvaliacaoCinema(avaliacao);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<CinemaAvaliacaoDTO> createAvaliacao(@RequestBody CinemaAvaliacaoDTO dto) {
+        CinemaAvaliacaoDTO created = avaliacaoService.create(dto);
+        return ResponseEntity.ok(created);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CinemaAvaliacaoDTO> updateAvaliacao(
-            @PathVariable("id") Long idAvaliacaoCinema,
+            @PathVariable Long id,
             @RequestBody CinemaAvaliacaoDTO dto) {
-        Optional<CinemaAvaliacaoDTO> updated = avaliacaoService.updateAvaliacao(idAvaliacaoCinema, dto);
-        return updated.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Optional<CinemaAvaliacaoDTO> updated = avaliacaoService.update(id, dto);
+        return updated.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAvaliacao(@PathVariable("id") Long idAvaliacaoCinema) {
-        boolean deleted = avaliacaoService.deleteAvaliacao(idAvaliacaoCinema);
+    public ResponseEntity<Void> deleteAvaliacao(@PathVariable Long id) {
+        boolean deleted = avaliacaoService.delete(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
-
 }

@@ -1,14 +1,15 @@
 package com.maisprati.Cineseat.controllers;
 
-import com.maisprati.Cineseat.dto.CinemaDTO;
-import com.maisprati.Cineseat.entities.Cinema;
-import com.maisprati.Cineseat.service.CinemaService;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import com.maisprati.Cineseat.dto.CinemaDTO;
+import com.maisprati.Cineseat.entities.Cinema;
+import com.maisprati.Cineseat.service.CinemaService;
 
 @RestController
 @RequestMapping("/api/cinemas")
@@ -59,6 +60,19 @@ public class CinemaController {
         return ResponseEntity.ok(cinemaService.findByTotalSalas(totalSalas));
     }
 
+    @GetMapping("/intervalo/salas")
+public ResponseEntity<List<CinemaDTO>> findByTotalSalasBetween(
+        @RequestParam(name = "min", required = false, defaultValue = "0") Integer min,
+        @RequestParam(name = "max", required = false, defaultValue = "20") Integer max) {
+
+    if (min > max) {
+        return ResponseEntity.badRequest().body(null);
+    }
+
+    List<CinemaDTO> cinemas = cinemaService.findByTotalSalasBetween(min, max);
+    return ResponseEntity.ok(cinemas);
+}
+
     @PostMapping
     public ResponseEntity<CinemaDTO> createCinema(@RequestBody Cinema cinema) {
         return ResponseEntity.ok(cinemaService.createCinema(cinema));
@@ -66,7 +80,7 @@ public class CinemaController {
 
     @PutMapping("/{idCinema}")
     public ResponseEntity<CinemaDTO> updateCinema(@PathVariable Long idCinema,
-                                                  @RequestBody CinemaDTO dto) {
+            @RequestBody CinemaDTO dto) {
         Optional<CinemaDTO> updatedCinema = cinemaService.updateCinema(idCinema, dto);
         return updatedCinema.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

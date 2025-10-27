@@ -72,6 +72,13 @@ public class CinemaService {
                 .collect(Collectors.toList());
     }
 
+    public List<CinemaDTO> findByTotalSalasBetween(Integer min, Integer max) {
+        return cinemaRepository.findByTotalSalasBetween(min, max)
+                .stream()
+                .map(CinemaDTO::new)
+                .collect(Collectors.toList());
+    }
+
     public CinemaDTO createCinema(Cinema cinema) {
         if (cinema.getSalas() != null) {
             for (Sala sala : cinema.getSalas()) {
