@@ -7,16 +7,27 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.maisprati.Cineseat.dto.CinemaAvaliacaoDTO;
+import com.maisprati.Cineseat.entities.Cinema;
 import com.maisprati.Cineseat.entities.CinemaAvaliacao;
+import com.maisprati.Cineseat.entities.User;
 import com.maisprati.Cineseat.repositories.CinemaAvaliacaoRepository;
+import com.maisprati.Cineseat.repositories.CinemaRepository;
+import com.maisprati.Cineseat.repositories.UserRepository;
 
 @Service
 public class CinemaAvaliacaoService {
 
     @Autowired
     private CinemaAvaliacaoRepository avaliacaoRepository;
+
+    @Autowired
+    private CinemaRepository cinemaRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public List<CinemaAvaliacaoDTO> findAll() {
         return avaliacaoRepository.findAll()
@@ -30,15 +41,29 @@ public class CinemaAvaliacaoService {
                 .map(CinemaAvaliacaoDTO::new);
     }
 
-    public List<CinemaAvaliacaoDTO> findByCinemaId(Long idCinema) {
-        return avaliacaoRepository.findByCinemaIdCinema(idCinema)
+    public List<CinemaAvaliacaoDTO> findByCinema(Long idCinema) {
+        return avaliacaoRepository.findByCinema_IdCinema(idCinema)
                 .stream()
                 .map(CinemaAvaliacaoDTO::new)
                 .collect(Collectors.toList());
     }
 
-    public List<CinemaAvaliacaoDTO> findByUsuarioId(Long idUsuario) {
-        return avaliacaoRepository.findByUsuarioId(idUsuario)
+    public List<CinemaAvaliacaoDTO> findByUsuario(Long idUsuario) {
+        return avaliacaoRepository.findByUsuario_Id(idUsuario)
+                .stream()
+                .map(CinemaAvaliacaoDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<CinemaAvaliacaoDTO> findByUsuarioAndCinema(Long idUsuario, Long idCinema) {
+        return avaliacaoRepository.findByUsuario_IdAndCinema_IdCinema(idUsuario, idCinema)
+                .stream()
+                .map(CinemaAvaliacaoDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<CinemaAvaliacaoDTO> findByCinemaWithComentario(Long idCinema) {
+        return avaliacaoRepository.findByCinema_IdCinemaAndComentarioIsNotNull(idCinema)
                 .stream()
                 .map(CinemaAvaliacaoDTO::new)
                 .collect(Collectors.toList());
@@ -73,36 +98,88 @@ public class CinemaAvaliacaoService {
     }
 
     public List<CinemaAvaliacaoDTO> findByNotaAtendimento(Integer notaAtendimento) {
-    return avaliacaoRepository.findByNotaAtendimento(notaAtendimento)
-        .stream()
-        .map(CinemaAvaliacaoDTO::new)
-        .collect(Collectors.toList());
+        return avaliacaoRepository.findByNotaAtendimento(notaAtendimento)
+                .stream()
+                .map(CinemaAvaliacaoDTO::new)
+                .collect(Collectors.toList());
     }
 
-    public CinemaAvaliacaoDTO createAvaliacaoCinema(CinemaAvaliacao avaliacao) {
+    public Long countByCinema(Long idCinema) {
+        return avaliacaoRepository.countByCinema_IdCinema(idCinema);
+    }
+
+    public Long countByUsuario(Long idUsuario) {
+        return avaliacaoRepository.countByUsuario_Id(idUsuario);
+    }
+
+    public List<CinemaAvaliacaoDTO> findAvaliacoesRecentes(Long idCinema) {
+        return avaliacaoRepository.findAvaliacoesRecentes(idCinema)
+                .stream()
+                .map(CinemaAvaliacaoDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public Optional<CinemaAvaliacaoDTO> findAverageRatingsByCinemaId(Long idCinema) {
+        return avaliacaoRepository.findAverageRatingsByCinemaId(idCinema);
+    }
+
+    public List<CinemaAvaliacaoDTO> rankingByAverageScore() {
+        return avaliacaoRepository.rankingTopCinemasByAverageScore();
+    }
+
+    public List<CinemaAvaliacaoDTO> rankingByCity(String cidade) {
+        return avaliacaoRepository.rankingTopCinemasByCity(cidade);
+    }
+
+    public List<CinemaAvaliacaoDTO> rankingByState(String estado) {
+        return avaliacaoRepository.rankingTopCinemasByState(estado);
+    }
+
+    @Transactional
+    public CinemaAvaliacaoDTO create(CinemaAvaliacaoDTO dto) {
+        if (dto.getIdCinema() == null) {
+            throw new IllegalArgumentException("idCinema é obrigatório");
+        }
+        if (dto.getIdUsuario() == null) {
+            throw new IllegalArgumentException("idUsuario é obrigatório");
+        }
+
+        Cinema cinemaRef = cinemaRepository.getReferenceById(dto.getIdCinema());
+        User userRef = userRepository.getReferenceById(dto.getIdUsuario());
+
+        CinemaAvaliacao avaliacao = new CinemaAvaliacao();
+        avaliacao.setCinema(cinemaRef);
+        avaliacao.setUsuario(userRef);
+        avaliacao.setIdIngresso(dto.getIdIngresso());
+        avaliacao.setNotaGeral(dto.getNotaGeral());
+        avaliacao.setNotaLimpeza(dto.getNotaLimpeza());
+        avaliacao.setNotaAtendimento(dto.getNotaAtendimento());
+        avaliacao.setNotaPreco(dto.getNotaPreco());
+        avaliacao.setNotaAlimentacao(dto.getNotaAlimentacao());
+        avaliacao.setComentario(dto.getComentario());
         avaliacao.setDataAvaliacao(LocalDateTime.now());
-        CinemaAvaliacao newAvaliacao = avaliacaoRepository.save(avaliacao);
-        return new CinemaAvaliacaoDTO(newAvaliacao);
+
+        avaliacao = avaliacaoRepository.save(avaliacao);
+        return new CinemaAvaliacaoDTO(avaliacao);
     }
 
-    public Optional<CinemaAvaliacaoDTO> updateAvaliacao(Long idAvaliacaoCinema, CinemaAvaliacaoDTO dto) {
+    @Transactional
+    public Optional<CinemaAvaliacaoDTO> update(Long idAvaliacaoCinema, CinemaAvaliacaoDTO dto) {
         return avaliacaoRepository.findById(idAvaliacaoCinema).map(avaliacao -> {
-            updateAvaliacaoData(avaliacao, dto);
-            return new CinemaAvaliacaoDTO(avaliacaoRepository.save(avaliacao));
+            if (dto.getNotaGeral() != null) avaliacao.setNotaGeral(dto.getNotaGeral());
+            if (dto.getNotaLimpeza() != null) avaliacao.setNotaLimpeza(dto.getNotaLimpeza());
+            if (dto.getNotaAtendimento() != null) avaliacao.setNotaAtendimento(dto.getNotaAtendimento());
+            if (dto.getNotaPreco() != null) avaliacao.setNotaPreco(dto.getNotaPreco());
+            if (dto.getNotaAlimentacao() != null) avaliacao.setNotaAlimentacao(dto.getNotaAlimentacao());
+            if (dto.getComentario() != null) avaliacao.setComentario(dto.getComentario());
+            avaliacao.setDataAtualizacao(LocalDateTime.now());
+            avaliacao = avaliacaoRepository.save(avaliacao);
+            return new CinemaAvaliacaoDTO(avaliacao);
         });
     }
 
-    private void updateAvaliacaoData(CinemaAvaliacao avaliacao, CinemaAvaliacaoDTO dto) {
-        if (dto.getNotaGeral() != null) avaliacao.setNotaGeral(dto.getNotaGeral());
-        if (dto.getNotaLimpeza() != null) avaliacao.setNotaLimpeza(dto.getNotaLimpeza());
-        if (dto.getNotaAtendimento() != null) avaliacao.setNotaAtendimento(dto.getNotaAtendimento());
-        if (dto.getNotaPreco() != null) avaliacao.setNotaPreco(dto.getNotaPreco());
-        if (dto.getNotaAlimentacao() != null) avaliacao.setNotaAlimentacao(dto.getNotaAlimentacao());
-        if (dto.getComentario() != null) avaliacao.setComentario(dto.getComentario());
-        avaliacao.setDataAtualizacao(LocalDateTime.now());
-    }
-
-    public boolean deleteAvaliacao(Long idAvaliacaoCinema) {
+    @Transactional
+    public boolean delete(Long idAvaliacaoCinema) {
         return avaliacaoRepository.findById(idAvaliacaoCinema).map(avaliacao -> {
             avaliacaoRepository.delete(avaliacao);
             return true;

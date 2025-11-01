@@ -15,5 +15,5 @@ public interface CinemaRepository extends JpaRepository<Cinema, Long> {
     List<Cinema> findAllByTemBomboniereTrue();
 
     List<Cinema> findByTotalSalas(Integer totalSalas);
-    List<Cinema> findByTotalSalasGreaterThanEqual(Integer totalSalas);
+    List<Cinema> findByTotalSalasBetween(Integer min, Integer max);
 }

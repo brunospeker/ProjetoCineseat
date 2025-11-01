@@ -92,7 +92,6 @@ public class Cinema {
     public Long getIdCinema() {
         return idCinema;
     }
-
     public void setIdCinema(Long idCinema) {
         this.idCinema = idCinema;
     }
@@ -100,7 +99,6 @@ public class Cinema {
     public String getNomeCinema() {
         return nomeCinema;
     }
-
     public void setNomeCinema(String nomeCinema) {
         this.nomeCinema = nomeCinema;
     }
@@ -108,7 +106,6 @@ public class Cinema {
     public String getSite() {
         return site;
     }
-
     public void setSite(String site) {
         this.site = site;
     }
@@ -116,7 +113,6 @@ public class Cinema {
     public String getCnpj() {
         return cnpj;
     }
-
     public void setCnpj(String cnpj) {
         this.cnpj = cnpj;
     }
@@ -124,7 +120,6 @@ public class Cinema {
     public String getEstado() {
         return estado;
     }
-
     public void setEstado(String estado) {
         this.estado = estado;
     }
@@ -132,7 +127,6 @@ public class Cinema {
     public String getUf() {
         return uf;
     }
-
     public void setUf(String uf) {
         this.uf = uf;
     }
@@ -140,7 +134,6 @@ public class Cinema {
     public String getCidade() {
         return cidade;
     }
-
     public void setCidade(String cidade) {
         this.cidade = cidade;
     }
@@ -148,7 +141,6 @@ public class Cinema {
     public String getIdCidade() {
         return idCidade;
     }
-
     public void setIdCidade(String idCidade) {
         this.idCidade = idCidade;
     }
@@ -156,7 +148,6 @@ public class Cinema {
     public String getBairro() {
         return bairro;
     }
-
     public void setBairro(String bairro) {
         this.bairro = bairro;
     }
@@ -164,7 +155,6 @@ public class Cinema {
     public String getNumero() {
         return numero;
     }
-
     public void setNumero(String numero) {
         this.numero = numero;
     }
@@ -172,7 +162,6 @@ public class Cinema {
     public String getImagensJson() {
         return imagensJson;
     }
-
     public void setImagensJson(String imagensJson) {
         this.imagensJson = imagensJson;
     }
@@ -180,15 +169,13 @@ public class Cinema {
     public Boolean getTemBomboniere() {
         return temBomboniere;
     }
-
     public void setTemBomboniere(Boolean temBomboniere) {
         this.temBomboniere = temBomboniere;
     }
 
     public int getTotalSalas() {
-        return totalSalas != null ? totalSalas.intValue() : 0;
+        return totalSalas != null ? totalSalas : 0;
     }
-
     public void setTotalSalas(Integer totalSalas) {
         this.totalSalas = totalSalas;
     }
@@ -196,7 +183,6 @@ public class Cinema {
     public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
-
     public void setDataCriacao(LocalDateTime dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
@@ -204,7 +190,6 @@ public class Cinema {
     public LocalDateTime getDataAtualizacao() {
         return dataAtualizacao;
     }
-
     public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
         this.dataAtualizacao = dataAtualizacao;
     }
@@ -212,7 +197,6 @@ public class Cinema {
     public Boolean getAtivo() {
         return ativo;
     }
-
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
@@ -220,7 +204,6 @@ public class Cinema {
     public List<Sala> getSalas() {
         return salas;
     }
-
     public void setSalas(List<Sala> salas) {
         this.salas = salas;
         this.totalSalas = (salas != null) ? salas.size() : 0;
@@ -245,9 +228,7 @@ public class Cinema {
     public List<CinemaAvaliacao> getAvaliacoes() {
         return avaliacoes;
     }
-
     public void setAvaliacoes(List<CinemaAvaliacao> avaliacoes) {
         this.avaliacoes = avaliacoes;
     }
-
 }

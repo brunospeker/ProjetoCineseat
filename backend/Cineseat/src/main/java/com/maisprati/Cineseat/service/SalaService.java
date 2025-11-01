@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.maisprati.Cineseat.entities.Cinema;
-import com.maisprati.Cineseat.repositories.CinemaRepository;
 @Service
 public class SalaService {
 
