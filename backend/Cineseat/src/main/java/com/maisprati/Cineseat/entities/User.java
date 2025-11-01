@@ -31,13 +31,12 @@ public class User {
 
     public User(){}
 
-    public User(String username, String email, String password, Integer role, String imgProfile){
+    public User(String username, String email, String password){
         super();
         this.username = username;
         this.email = email;
         this.password = password;
-        this.role = role;
-        this.imgProfile = imgProfile;
+        this.role = 1;
     }
 
     public User(Long id, String username, String email, String password, Integer role, String imgProfile, LocalDateTime createdAt){

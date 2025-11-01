@@ -3,15 +3,50 @@ import { Link } from "react-router-dom";
 import logo from "../assets/logo-dark.jpeg";
 
 export default function Cadastro() {
-  const [nome, setNome] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (nome && email && senha) {
-      alert("Conta criada com sucesso!");
+
+    if (!username && !email && !password) {
+      alert("Preencha todos os campos!");
+      return;
     }
+
+    setLoading(true);
+
+    try{
+      const response = await fetch("http://localhost:8080/api/users/register",{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password})
+      });
+
+      if(!response.ok){
+        const errorText = await response.json();
+        throw new Error(errorText || "Erro ao criar conta");
+      }
+
+      const data = await response.json();
+      alert(`Usuário ${data.username} criado com sucesso! Faça o Login na sua conta.`);
+
+      //limpa os nomes (retirar depois para trocar o link de redirecionamento)
+      setUsername("");
+      setEmail("");
+      setPassword("");
+
+    } catch (error){
+      console.error("Erro ao cadastrar:", error);
+      alert(error.message || "Erro inesperado");
+    } finally {
+      setLoading(false);
+    }
+
   }
 
   return (
@@ -37,10 +72,10 @@ export default function Cadastro() {
 
           <input
             type="text"
-            placeholder="Nome"
+            placeholder="Username"
             className="w-full px-4 py-3 bg-black border border-white rounded-md text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
 
           <input
@@ -55,15 +90,18 @@ export default function Cadastro() {
             type="password"
             placeholder="Senha"
             className="w-full px-4 py-3 bg-black border border-white rounded-md text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
 
           <button
             type="submit"
-            className="border border-red-600 text-white rounded-full py-2 text-lg hover:bg-red-600 transition"
+            disabled={loading}
+            className={`border border-red-600 text-white rounded-full py-2 text-lg hover:bg-red-600 transition ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
-            Criar conta
+            {loading ? "Criando..." : "Criar conta"}
           </button>
 
           <div className="text-center mt-2">

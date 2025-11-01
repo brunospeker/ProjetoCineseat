@@ -7,7 +7,7 @@ import Navbar from "../components/Navbar";
 import poltronaEscura from "../assets/poltronas-dark.jpg";
 import poltronaClara from "../assets/poltronas-light.jpg";
 
-export default function Home({ darkMode, setDarkMode }) {
+export default function Home({ darkMode, setDarkMode, user, onLogout }) {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Topo com imagem que troca conforme o tema */}
@@ -24,7 +24,7 @@ export default function Home({ darkMode, setDarkMode }) {
 
         {/* Conteúdo em cima da imagem */}
         <div className="relative z-10">
-          <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
+          <Navbar darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={onLogout}/>
           <div className="mt-10">
             <SearchBar darkMode={darkMode} />
           </div>

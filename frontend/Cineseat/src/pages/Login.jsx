@@ -1,17 +1,44 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo-dark.jpeg"; // logo vermelha da poltrona
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (email && password) {
-      localStorage.setItem("user", JSON.stringify({ email }));
-      onLogin({ email });
+  
+    if (!email || !password) {
+      alert("Preencha email e senha");
+      return;
     }
+  
+    fetch("http://localhost:8080/api/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(text || "Erro ao autenticar");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify({ email: data.email, username: data.username }));
+        onLogin({ email: data.email, username: data.username });
+        navigate("/");
+      })
+      .catch((err) => {
+        alert("Credenciais inválidas");
+        console.error(err);
+      });
   }
 
   return (
