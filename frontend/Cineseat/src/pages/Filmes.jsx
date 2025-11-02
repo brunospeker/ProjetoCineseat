@@ -5,8 +5,8 @@ import { Search, ChevronDown } from "lucide-react";
 const filmesEmCartaz = [
  
   {
-    titulo: "Barbie e o Portal Secreto",
-    imagem: "../posters/barbie.jpg",
+    titulo: "Barbie",
+    imagem: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/yRRuLt7sMBEQkHsd1S3KaaofZn7.jpg",
     classificacao: "L",
   },
  
