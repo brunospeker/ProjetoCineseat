@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MovieCard from "./MovieCard";
 
 export default function MovieSection({ title }) {
+
+  const [movie, setMovie] = useState([]);
+  const api_key = "606cca6cdedaffa15296e36ac4d914ef"
+
+  
+
   return (
     <section className="px-6 py-4">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
