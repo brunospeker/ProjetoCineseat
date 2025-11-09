@@ -36,6 +36,8 @@ public class FilmeDTO {
     @JsonProperty("em_cartaz")
     private Boolean emCartaz;
 
+    private String origem; // "LOCAL" ou "API"
+
     // Construtores
     public FilmeDTO() {}
 
@@ -147,5 +149,13 @@ public class FilmeDTO {
 
     public void setEmCartaz(Boolean emCartaz) {
         this.emCartaz = emCartaz;
+    }
+
+    public String getOrigem() {
+        return origem;
+    }
+
+    public void setOrigem(String origem) {
+        this.origem = origem;
     }
 }

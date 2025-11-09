@@ -49,16 +49,63 @@ public class Filme {
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
 
-    // Construtores
+    @Enumerated(EnumType.STRING)
+    @Column(name = "origem")
+    private OrigemFilme origem; // LOCAL ou API
+
+    // Enum para identificar a origem do filme
+    public enum OrigemFilme {
+        LOCAL,  // Criado manualmente no sistema
+        API     // Importado da API da Ingresso.com
+    }
+
+    // Construtor padrão
     public Filme() {
         this.dataCriacao = LocalDateTime.now();
         this.dataAtualizacao = LocalDateTime.now();
     }
 
+    // Construtor para filmes da API (consulta externa)
     public Filme(String ingressoId, String titulo) {
         this();
         this.ingressoId = ingressoId;
         this.titulo = titulo;
+        this.origem = OrigemFilme.API;
+    }
+
+    // Construtor completo para filmes da API
+    public static Filme fromAPI(String ingressoId, String titulo, String sinopse, String diretor, LocalDate dataLancamento, Integer duracao, String genero, String classificacao, String posterUrl, String trailerUrl, Double nota) {
+        Filme filme = new Filme(ingressoId, titulo);
+        filme.setSinopse(sinopse);
+        filme.setDiretor(diretor);
+        filme.setDataLancamento(dataLancamento);
+        filme.setDuracao(duracao);
+        filme.setGenero(genero);
+        filme.setClassificacao(classificacao);
+        filme.setPosterUrl(posterUrl);
+        filme.setTrailerUrl(trailerUrl);
+        filme.setNota(nota);
+        return filme;
+    }
+
+    // Construtor para filmes criados localmente
+    public static Filme createLocal(String titulo, String sinopse, String diretor) {
+        Filme filme = new Filme();
+        filme.setTitulo(titulo);
+        filme.setSinopse(sinopse);
+        filme.setDiretor(diretor);
+        filme.setOrigem(OrigemFilme.LOCAL);
+        return filme;
+    }
+
+    // Método para verificar se é da API
+    public boolean isFromAPI() {
+        return this.origem == OrigemFilme.API && this.ingressoId != null;
+    }
+
+    // Método para verificar se foi criado localmente
+    public boolean isLocal() {
+        return this.origem == OrigemFilme.LOCAL;
     }
 
     // Getters e Setters
@@ -181,6 +228,10 @@ public class Filme {
     public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
         this.dataAtualizacao = dataAtualizacao;
     }
+
+    public OrigemFilme getOrigem() {return origem;}
+
+    public void setOrigem(OrigemFilme origem) {this.origem = origem;}
 
     @PreUpdate
     public void preUpdate() {

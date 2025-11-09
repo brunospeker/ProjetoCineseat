@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.maisprati.Cineseat.dto.FilmeDTO;
 import com.maisprati.Cineseat.entities.Filme;
@@ -62,10 +63,89 @@ public class FilmeService {
     }
 
     // Salvar filme
+    @Transactional
     public FilmeDTO salvarFilme(FilmeDTO filmeDTO) {
         Filme filme = convertToEntity(filmeDTO);
         Filme filmeSalvo = filmeRepository.save(filme);
         return convertToDTO(filmeSalvo);
+    }
+
+
+    //Verifica se um filme já existe no banco pelo ingressoId
+    public boolean filmeExiste(String ingressoId) {
+        return filmeRepository.existsByIngressoId(ingressoId);
+    }
+
+
+    //Salva filme da API com validação de duplicatas
+    //Se já existir, atualiza. Se não existir, cria novo.
+
+    @Transactional
+    public FilmeDTO salvarFilmeAPI(FilmeDTO filmeDTO) {
+        if (filmeDTO.getIngressoId() == null || filmeDTO.getIngressoId().isEmpty()) {
+            throw new IllegalArgumentException("Filme da API deve ter ingressoId");
+        }
+
+        // Verifica se já existe
+        Optional<Filme> filmeExistente = filmeRepository.findByIngressoId(filmeDTO.getIngressoId());
+
+        if (filmeExistente.isPresent()) {
+            // Atualiza o filme existente
+            Filme filme = filmeExistente.get();
+            atualizarDadosFilme(filme, filmeDTO);
+            filme.setOrigem(Filme.OrigemFilme.API);
+            Filme atualizado = filmeRepository.save(filme);
+            return convertToDTO(atualizado);
+        } else {
+            // Cria novo filme da API
+            Filme filme = convertToEntity(filmeDTO);
+            filme.setOrigem(Filme.OrigemFilme.API);
+            Filme salvo = filmeRepository.save(filme);
+            return convertToDTO(salvo);
+        }
+    }
+
+
+//Salva filme criado localmente
+
+    @Transactional
+    public FilmeDTO salvarFilmeLocal(FilmeDTO filmeDTO) {
+        Filme filme = convertToEntity(filmeDTO);
+        filme.setOrigem(Filme.OrigemFilme.LOCAL);
+        Filme salvo = filmeRepository.save(filme);
+        return convertToDTO(salvo);
+    }
+
+    //Busca ou cria filme da API
+    //Útil para importação: retorna existente ou cria novo
+
+    @Transactional
+    public FilmeDTO buscarOuCriarFilmeAPI(FilmeDTO filmeDTO) {
+        if (filmeDTO.getIngressoId() == null || filmeDTO.getIngressoId().isEmpty()) {
+            throw new IllegalArgumentException("Filme da API deve ter ingressoId");
+        }
+
+        Optional<Filme> existente = filmeRepository.findByIngressoId(filmeDTO.getIngressoId());
+
+        if (existente.isPresent()) {
+            return convertToDTO(existente.get());
+        } else {
+            Filme filme = convertToEntity(filmeDTO);
+            filme.setOrigem(Filme.OrigemFilme.API);
+            Filme salvo = filmeRepository.save(filme);
+            return convertToDTO(salvo);
+        }
+    }
+
+
+    //Sincroniza múltiplos filmes da API de uma vez
+    //Ideal para importação em lote
+
+    @Transactional
+    public List<FilmeDTO> sincronizarFilmesAPI(List<FilmeDTO> filmesDTO) {
+        return filmesDTO.stream()
+                .map(this::salvarFilmeAPI)
+                .collect(Collectors.toList());
     }
 
     // Atualizar filme
@@ -103,14 +183,26 @@ public class FilmeService {
         dto.setTrailerUrl(filme.getTrailerUrl());
         dto.setNota(filme.getNota());
         dto.setEmCartaz(filme.getEmCartaz());
+
+        if (filme.getOrigem() != null) {
+            dto.setOrigem(filme.getOrigem().name());
+        }
+
         return dto;
     }
 
     // Converter DTO para Entity
     private Filme convertToEntity(FilmeDTO dto) {
-        Filme filme = new Filme();
+        Filme filme;
+
+        // Usa construtor apropriado se tiver ingressoId
+        if (dto.getIngressoId() != null && !dto.getIngressoId().isEmpty()) {
+            filme = new Filme(dto.getIngressoId(), dto.getTitulo());
+        } else {
+            filme = new Filme();
+        }
+
         filme.setId(dto.getId());
-        filme.setIngressoId(dto.getIngressoId());
         filme.setTitulo(dto.getTitulo());
         filme.setSinopse(dto.getSinopse());
         filme.setDiretor(dto.getDiretor());
