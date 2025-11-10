@@ -23,9 +23,6 @@ public class SalaAvaliacao {
     private Integer nota; // 1 a 5 estrelas
 
     // Avaliações específicas por categoria
-    @Column(name = "nota_conforto")
-    private Integer notaConforto; // 1 a 5 - conforto das poltronas
-
     @Column(name = "nota_som")
     private Integer notaSom; // 1 a 5 - qualidade do som
 
@@ -108,17 +105,6 @@ public class SalaAvaliacao {
             throw new IllegalArgumentException("Nota deve estar entre 1 e 5");
         }
         this.nota = nota;
-    }
-
-    public Integer getNotaConforto() {
-        return notaConforto;
-    }
-
-    public void setNotaConforto(Integer notaConforto) {
-        if (notaConforto != null && (notaConforto < 1 || notaConforto > 5)) {
-            throw new IllegalArgumentException("Nota de conforto deve estar entre 1 e 5");
-        }
-        this.notaConforto = notaConforto;
     }
 
     public Integer getNotaSom() {
@@ -223,10 +209,6 @@ public class SalaAvaliacao {
         int totalNotas = 0;
         int quantidadeNotas = 0;
 
-        if (notaConforto != null) {
-            totalNotas += notaConforto;
-            quantidadeNotas++;
-        }
         if (notaSom != null) {
             totalNotas += notaSom;
             quantidadeNotas++;

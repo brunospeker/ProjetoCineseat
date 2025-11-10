@@ -95,7 +95,6 @@ public class SalaAvaliacaoService {
         avaliacao.setSala(sala.get());
         avaliacao.setUsuario(usuario.get());
         avaliacao.setNota(avaliacaoDTO.getNota());
-        avaliacao.setNotaConforto(avaliacaoDTO.getNotaConforto());
         avaliacao.setNotaSom(avaliacaoDTO.getNotaSom());
         avaliacao.setNotaImagem(avaliacaoDTO.getNotaImagem());
         avaliacao.setNotaLimpeza(avaliacaoDTO.getNotaLimpeza());
@@ -111,7 +110,6 @@ public class SalaAvaliacaoService {
         return salaAvaliacaoRepository.findById(id)
                 .map(avaliacao -> {
                     if (avaliacaoDTO.getNota() != null) avaliacao.setNota(avaliacaoDTO.getNota());
-                    if (avaliacaoDTO.getNotaConforto() != null) avaliacao.setNotaConforto(avaliacaoDTO.getNotaConforto());
                     if (avaliacaoDTO.getNotaSom() != null) avaliacao.setNotaSom(avaliacaoDTO.getNotaSom());
                     if (avaliacaoDTO.getNotaImagem() != null) avaliacao.setNotaImagem(avaliacaoDTO.getNotaImagem());
                     if (avaliacaoDTO.getNotaLimpeza() != null) avaliacao.setNotaLimpeza(avaliacaoDTO.getNotaLimpeza());
@@ -162,7 +160,6 @@ public class SalaAvaliacaoService {
 
         Sala salaEntity = sala.get();
         Double mediaGeral = salaAvaliacaoRepository.calcularMediaAvaliacoesPorSala(salaEntity);
-        Double mediaConforto = salaAvaliacaoRepository.calcularMediaConfortoPorSala(salaEntity);
         Double mediaSom = salaAvaliacaoRepository.calcularMediaSomPorSala(salaEntity);
         Double mediaImagem = salaAvaliacaoRepository.calcularMediaImagemPorSala(salaEntity);
         Double mediaLimpeza = salaAvaliacaoRepository.calcularMediaLimpezaPorSala(salaEntity);
@@ -171,7 +168,6 @@ public class SalaAvaliacaoService {
 
         return Map.of(
                 "media_geral", mediaGeral != null ? mediaGeral : 0.0,
-                "media_conforto", mediaConforto != null ? mediaConforto : 0.0,
                 "media_som", mediaSom != null ? mediaSom : 0.0,
                 "media_imagem", mediaImagem != null ? mediaImagem : 0.0,
                 "media_limpeza", mediaLimpeza != null ? mediaLimpeza : 0.0,
@@ -189,7 +185,6 @@ public class SalaAvaliacaoService {
         dto.setUsuarioId(avaliacao.getUsuario().getId());
         dto.setUsuarioNome(avaliacao.getUsuario().getUsername());
         dto.setNota(avaliacao.getNota());
-        dto.setNotaConforto(avaliacao.getNotaConforto());
         dto.setNotaSom(avaliacao.getNotaSom());
         dto.setNotaImagem(avaliacao.getNotaImagem());
         dto.setNotaLimpeza(avaliacao.getNotaLimpeza());

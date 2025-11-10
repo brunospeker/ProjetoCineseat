@@ -36,10 +36,6 @@ public interface SalaAvaliacaoRepository extends JpaRepository<SalaAvaliacao, Lo
     @Query("SELECT AVG(sa.nota) FROM SalaAvaliacao sa WHERE sa.sala = :sala AND sa.ativa = true")
     Double calcularMediaAvaliacoesPorSala(@Param("sala") Sala sala);
 
-    // Calcular média de conforto de uma sala
-    @Query("SELECT AVG(sa.notaConforto) FROM SalaAvaliacao sa WHERE sa.sala = :sala AND sa.ativa = true AND sa.notaConforto IS NOT NULL")
-    Double calcularMediaConfortoPorSala(@Param("sala") Sala sala);
-
     // Calcular média de som de uma sala
     @Query("SELECT AVG(sa.notaSom) FROM SalaAvaliacao sa WHERE sa.sala = :sala AND sa.ativa = true AND sa.notaSom IS NOT NULL")
     Double calcularMediaSomPorSala(@Param("sala") Sala sala);
