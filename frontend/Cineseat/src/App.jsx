@@ -3,12 +3,13 @@ import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import logoDark from "./assets/logo-dark.jpeg";
 import logoLight from "./assets/logo-light.jpeg";
 
-
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Filmes from "./pages/Filmes";
 import Cinema from "./pages/Cinema";
 import Cadastro from "./pages/Cadastro";
+import Perfil from "./pages/Perfil"; 
+import Conta from "./pages/Conta";
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(true);
@@ -34,20 +35,19 @@ export default function App() {
   // Seleciona logo conforme modo escuro ou claro
   const logo = darkMode ? logoDark : logoLight;
 
-  // <Route path="/avaliacoes" element={user ? <Avaliacoes user={user} /> : <Navigate to="/login" />} /> {/* A ser implmementado futuramente */}
-
   return (
     <BrowserRouter>
       <div className={darkMode ? "min-h-screen bg-black text-white" : "min-h-screen bg-white text-black"}>
         
-
         {/* Rotas do site */}
         <Routes>
           <Route path="/" element={<Home darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
           <Route path="/login" element={!user ? <Login onLogin={handleLogin} /> : <Navigate to="/" />} />
-          <Route path="/cadastro" element={<Cadastro />} />
-          <Route path="/filmes" element={<Filmes />} />
-          <Route path="/cinema" element={<Cinema />} />
+          <Route path="/cadastro" element={<Cadastro darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
+          <Route path="/filmes" element={<Filmes darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
+          <Route path="/cinema" element={<Cinema darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
+          <Route path="/perfil" element={<Perfil darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
+        <Route path="/conta" element={<Conta darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
         </Routes>
       </div>
     </BrowserRouter>
