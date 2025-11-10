@@ -18,6 +18,17 @@ public class FilmeController {
     @Autowired
     private FilmeService filmeService;
 
+    @GetMapping("/tmdb/{filmeId}")
+    public ResponseEntity<FilmeDTO> buscarOuImportarFilme(@PathVariable String filmeId) {
+        FilmeDTO filme = filmeService.buscarOuImportarFilme(filmeId);
+
+        if (filme == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(filme);
+    }
+
     // GET /api/filmes - Buscar todos os filmes
     @GetMapping
     public ResponseEntity<List<FilmeDTO>> buscarTodosFilmes() {
@@ -32,7 +43,7 @@ public class FilmeController {
         return ResponseEntity.ok(filmes);
     }
 
-    // GET /api/filmes/{id} - Buscar filme por ID
+    // GET /api/filmes/{id} - Buscar filme por ID do banco
     @GetMapping("/{id}")
     public ResponseEntity<FilmeDTO> buscarFilmePorId(@PathVariable Long id) {
         Optional<FilmeDTO> filme = filmeService.buscarFilmePorId(id);
@@ -40,10 +51,10 @@ public class FilmeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // GET /api/filmes/ingresso/{ingressoId} - Buscar filme pelo ID da Ingresso.com
-    @GetMapping("/ingresso/{ingressoId}")
-    public ResponseEntity<FilmeDTO> buscarFilmePorIngressoId(@PathVariable String ingressoId) {
-        Optional<FilmeDTO> filme = filmeService.buscarFilmePorIngressoId(ingressoId);
+    // GET /api/filmes/filme/{filmeId} - Buscar filme pelo ID da TMDB
+    @GetMapping("/filme/{filmeId}")
+    public ResponseEntity<FilmeDTO> buscarFilmePorFilmeId(@PathVariable String filmeId) {
+        Optional<FilmeDTO> filme = filmeService.buscarFilmePorFilmeId(filmeId);
         return filme.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -87,23 +98,22 @@ public class FilmeController {
     }
 
 
-    //POST /api/filmes/api - Importar filme da API
-    //Falha se o filme já existir (retorna 409 Conflict)
-    @PostMapping("/api")
-    public ResponseEntity<?> importarFilmeAPI(@RequestBody FilmeDTO filmeDTO) {
+    //POST /api/filmes/TMDB - Importar filme da API
+    @PostMapping("/tmdb")
+    public ResponseEntity<?> importarFilmeTMDB(@RequestBody FilmeDTO filmeDTO) {
         try {
-            if (filmeDTO.getIngressoId() == null || filmeDTO.getIngressoId().isEmpty()) {
+            if (filmeDTO.getFilmeId() == null || filmeDTO.getFilmeId().isEmpty()) {
                 return ResponseEntity.badRequest()
-                        .body("IngressoId é obrigatório para filmes da API");
+                        .body("filmeID é obrigatório para filmes da TMDB");
             }
 
             // Verifica se já existe
-            if (filmeService.filmeExiste(filmeDTO.getIngressoId())) {
+            if (filmeService.filmeExiste(filmeDTO.getFilmeId())) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body("Filme já existe no banco de dados com IngressoId: " + filmeDTO.getIngressoId());
+                        .body("Filme já existe no banco de dados com TMDB: " + filmeDTO.getFilmeId());
             }
 
-            FilmeDTO filmeSalvo = filmeService.salvarFilmeAPI(filmeDTO);
+            FilmeDTO filmeSalvo = filmeService.salvarFilmeTMDB(filmeDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(filmeSalvo);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -113,17 +123,17 @@ public class FilmeController {
         }
     }
 
-    //PUT /api/filmes/api/sincronizar - Sincronizar filme da API
+    //PUT /api/filmes/tmdb/sincronizar - Sincronizar filme da API
     //Se já existe, atualiza. Se não existe, cria.
-    @PutMapping("/api/sincronizar")
-    public ResponseEntity<?> sincronizarFilmeAPI(@RequestBody FilmeDTO filmeDTO) {
+    @PutMapping("/tmdb/sincronizar")
+    public ResponseEntity<?> sincronizarFilmeTMDB(@RequestBody FilmeDTO filmeDTO) {
         try {
-            if (filmeDTO.getIngressoId() == null || filmeDTO.getIngressoId().isEmpty()) {
+            if (filmeDTO.getFilmeId() == null || filmeDTO.getFilmeId().isEmpty()) {
                 return ResponseEntity.badRequest()
-                        .body("IngressoId é obrigatório para filmes da API");
+                        .body("filmeID é obrigatório para filmes da TMDB");
             }
 
-            FilmeDTO filmeSalvo = filmeService.salvarFilmeAPI(filmeDTO);
+            FilmeDTO filmeSalvo = filmeService.salvarFilmeTMDB(filmeDTO);
             return ResponseEntity.ok(filmeSalvo);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -134,12 +144,12 @@ public class FilmeController {
     }
 
 
-    //POST /api/filmes/api/sincronizar-lote - Sincronizar múltiplos filmes
+    //POST /api/filmes/tmdb/sincronizar-lote - Sincronizar múltiplos filmes
     //Importa/atualiza vários filmes da API de uma vez
-    @PostMapping("/api/sincronizar-lote")
-    public ResponseEntity<?> sincronizarLoteAPI(@RequestBody List<FilmeDTO> filmesDTO) {
+    @PostMapping("/tmdb/sincronizar-lote")
+    public ResponseEntity<?> sincronizarLoteTMDB(@RequestBody List<FilmeDTO> filmesDTO) {
         try {
-            List<FilmeDTO> filmesSalvos = filmeService.sincronizarFilmesAPI(filmesDTO);
+            List<FilmeDTO> filmesSalvos = filmeService.sincronizarFilmesTMDB(filmesDTO);
             return ResponseEntity.ok(filmesSalvos);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -147,28 +157,14 @@ public class FilmeController {
         }
     }
 
-    //GET /api/filmes/api/existe/{ingressoId} - Verifica se filme existe
+    //GET /api/filmes/api/existe/{filmeID} - Verifica se filme existe
     //Retorna true/false se o filme já está no banco
-    @GetMapping("/api/existe/{ingressoId}")
-    public ResponseEntity<Boolean> verificarExistencia(@PathVariable String ingressoId) {
-        boolean existe = filmeService.filmeExiste(ingressoId);
+    @GetMapping("/tmdb/existe/{filmeID}")
+    public ResponseEntity<Boolean> verificarExistencia(@PathVariable String filmeID) {
+        boolean existe = filmeService.filmeExiste(filmeID);
         return ResponseEntity.ok(existe);
     }
 
-    //GET /api/filmes/api/buscar-ou-criar - Busca ou cria filme da API
-    //Retorna o filme existente ou cria um novo
-    @PostMapping("/api/buscar-ou-criar")
-    public ResponseEntity<?> buscarOuCriarFilmeAPI(@RequestBody FilmeDTO filmeDTO) {
-        try {
-            FilmeDTO filme = filmeService.buscarOuCriarFilmeAPI(filmeDTO);
-            return ResponseEntity.ok(filme);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao buscar ou criar filme: " + e.getMessage());
-        }
-    }
 
     // PUT /api/filmes/{id} - Atualizar filme
     @PutMapping("/{id}")

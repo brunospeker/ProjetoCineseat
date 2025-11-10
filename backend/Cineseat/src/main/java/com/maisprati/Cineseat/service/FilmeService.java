@@ -18,6 +18,37 @@ public class FilmeService {
     @Autowired
     private FilmeRepository filmeRepository;
 
+    @Autowired
+    private TMDBService tmdbService;
+
+
+    public FilmeDTO buscarOuImportarFilme(String filmeId) {
+        // Tenta buscar no banco de dados
+        Optional<Filme> filmeExistente = filmeRepository.findByFilmeId(filmeId);
+
+        if (filmeExistente.isPresent()) {
+            // Se existir no BD, retorna
+            return convertToDTO(filmeExistente.get());
+        }
+
+        // Se não existir, busca na API do TMDB
+        FilmeDTO filmeTMDB = tmdbService.buscarFilmePorId(filmeId);
+
+        if (filmeTMDB == null) {
+            // Se não encontrar no TMDB também, retorna null
+            return null;
+        }
+
+        // Salva o filme no banco de dados
+        Filme filme = convertToEntity(filmeTMDB);
+        filme.setOrigem(Filme.OrigemFilme.TMDB);
+        Filme filmeSalvo = filmeRepository.save(filme);
+
+        // Retorna o DTO do filme salvo
+        return convertToDTO(filmeSalvo);
+    }
+
+
     // Buscar todos os filmes
     public List<FilmeDTO> buscarTodosFilmes() {
         return filmeRepository.findAll()
@@ -40,9 +71,9 @@ public class FilmeService {
                 .map(this::convertToDTO);
     }
 
-    // Buscar filme por ID da Ingresso.com
-    public Optional<FilmeDTO> buscarFilmePorIngressoId(String ingressoId) {
-        return filmeRepository.findByIngressoId(ingressoId)
+    // Buscar filme por ID da TMDB (NO BANCO)
+    public Optional<FilmeDTO> buscarFilmePorFilmeId(String filmeID) {
+        return filmeRepository.findByFilmeId(filmeID)
                 .map(this::convertToDTO);
     }
 
@@ -71,42 +102,40 @@ public class FilmeService {
     }
 
 
-    //Verifica se um filme já existe no banco pelo ingressoId
-    public boolean filmeExiste(String ingressoId) {
-        return filmeRepository.existsByIngressoId(ingressoId);
+    //Verifica se um filme já existe no banco pelo filmeId
+    public boolean filmeExiste(String filmeId) {
+        return filmeRepository.existsByFilmeId(filmeId);
     }
 
 
-    //Salva filme da API com validação de duplicatas
-    //Se já existir, atualiza. Se não existir, cria novo.
-
+    // Salva filme do TMDB com validação de duplicatas
     @Transactional
-    public FilmeDTO salvarFilmeAPI(FilmeDTO filmeDTO) {
-        if (filmeDTO.getIngressoId() == null || filmeDTO.getIngressoId().isEmpty()) {
-            throw new IllegalArgumentException("Filme da API deve ter ingressoId");
+    public FilmeDTO salvarFilmeTMDB(FilmeDTO filmeDTO) {
+        if (filmeDTO.getFilmeId() == null || filmeDTO.getFilmeId().isEmpty()) {
+            throw new IllegalArgumentException("Filme da TMDB deve ter filmeID");
         }
 
         // Verifica se já existe
-        Optional<Filme> filmeExistente = filmeRepository.findByIngressoId(filmeDTO.getIngressoId());
+        Optional<Filme> filmeExistente = filmeRepository.findByFilmeId(filmeDTO.getFilmeId());
 
         if (filmeExistente.isPresent()) {
             // Atualiza o filme existente
             Filme filme = filmeExistente.get();
             atualizarDadosFilme(filme, filmeDTO);
-            filme.setOrigem(Filme.OrigemFilme.API);
+            filme.setOrigem(Filme.OrigemFilme.TMDB);
             Filme atualizado = filmeRepository.save(filme);
             return convertToDTO(atualizado);
         } else {
             // Cria novo filme da API
             Filme filme = convertToEntity(filmeDTO);
-            filme.setOrigem(Filme.OrigemFilme.API);
+            filme.setOrigem(Filme.OrigemFilme.TMDB);
             Filme salvo = filmeRepository.save(filme);
             return convertToDTO(salvo);
         }
     }
 
 
-//Salva filme criado localmente
+    //Salva filme criado localmente
 
     @Transactional
     public FilmeDTO salvarFilmeLocal(FilmeDTO filmeDTO) {
@@ -116,35 +145,11 @@ public class FilmeService {
         return convertToDTO(salvo);
     }
 
-    //Busca ou cria filme da API
-    //Útil para importação: retorna existente ou cria novo
-
+    // Sincroniza múltiplos filmes do TMDB de uma vez
     @Transactional
-    public FilmeDTO buscarOuCriarFilmeAPI(FilmeDTO filmeDTO) {
-        if (filmeDTO.getIngressoId() == null || filmeDTO.getIngressoId().isEmpty()) {
-            throw new IllegalArgumentException("Filme da API deve ter ingressoId");
-        }
-
-        Optional<Filme> existente = filmeRepository.findByIngressoId(filmeDTO.getIngressoId());
-
-        if (existente.isPresent()) {
-            return convertToDTO(existente.get());
-        } else {
-            Filme filme = convertToEntity(filmeDTO);
-            filme.setOrigem(Filme.OrigemFilme.API);
-            Filme salvo = filmeRepository.save(filme);
-            return convertToDTO(salvo);
-        }
-    }
-
-
-    //Sincroniza múltiplos filmes da API de uma vez
-    //Ideal para importação em lote
-
-    @Transactional
-    public List<FilmeDTO> sincronizarFilmesAPI(List<FilmeDTO> filmesDTO) {
+    public List<FilmeDTO> sincronizarFilmesTMDB(List<FilmeDTO> filmesDTO) {
         return filmesDTO.stream()
-                .map(this::salvarFilmeAPI)
+                .map(this::salvarFilmeTMDB)
                 .collect(Collectors.toList());
     }
 
@@ -171,7 +176,7 @@ public class FilmeService {
     private FilmeDTO convertToDTO(Filme filme) {
         FilmeDTO dto = new FilmeDTO();
         dto.setId(filme.getId());
-        dto.setIngressoId(filme.getIngressoId());
+        dto.setFilmeId(filme.getFilmeId());
         dto.setTitulo(filme.getTitulo());
         dto.setSinopse(filme.getSinopse());
         dto.setDiretor(filme.getDiretor());
@@ -195,9 +200,9 @@ public class FilmeService {
     private Filme convertToEntity(FilmeDTO dto) {
         Filme filme;
 
-        // Usa construtor apropriado se tiver ingressoId
-        if (dto.getIngressoId() != null && !dto.getIngressoId().isEmpty()) {
-            filme = new Filme(dto.getIngressoId(), dto.getTitulo());
+        // Usa construtor apropriado se tiver filmeID
+        if (dto.getFilmeId() != null && !dto.getFilmeId().isEmpty()) {
+            filme = new Filme(dto.getFilmeId(), dto.getTitulo());
         } else {
             filme = new Filme();
         }

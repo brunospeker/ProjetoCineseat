@@ -12,8 +12,8 @@ public class Filme {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "ingresso_id", unique = true)
-    private String ingressoId; // ID do filme na API da Ingresso.com
+    @Column(name = "filme_Id", unique = true)
+    private String filmeId;
 
     @Column(nullable = false)
     private String titulo;
@@ -54,10 +54,7 @@ public class Filme {
     private OrigemFilme origem; // LOCAL ou API
 
     // Enum para identificar a origem do filme
-    public enum OrigemFilme {
-        LOCAL,  // Criado manualmente no sistema
-        API     // Importado da API da Ingresso.com
-    }
+    public enum OrigemFilme {LOCAL, TMDB}
 
     // Construtor padrão
     public Filme() {
@@ -66,16 +63,16 @@ public class Filme {
     }
 
     // Construtor para filmes da API (consulta externa)
-    public Filme(String ingressoId, String titulo) {
+    public Filme(String filmeId, String titulo) {
         this();
-        this.ingressoId = ingressoId;
+        this.filmeId = filmeId;
         this.titulo = titulo;
-        this.origem = OrigemFilme.API;
+        this.origem = OrigemFilme.TMDB;
     }
 
     // Construtor completo para filmes da API
-    public static Filme fromAPI(String ingressoId, String titulo, String sinopse, String diretor, LocalDate dataLancamento, Integer duracao, String genero, String classificacao, String posterUrl, String trailerUrl, Double nota) {
-        Filme filme = new Filme(ingressoId, titulo);
+    public static Filme fromTMDB(String filmeId, String titulo, String sinopse, String diretor, LocalDate dataLancamento, Integer duracao, String genero, String classificacao, String posterUrl, String trailerUrl, Double nota) {
+        Filme filme = new Filme(filmeId, titulo);
         filme.setSinopse(sinopse);
         filme.setDiretor(diretor);
         filme.setDataLancamento(dataLancamento);
@@ -98,12 +95,12 @@ public class Filme {
         return filme;
     }
 
-    // Método para verificar se é da API
-    public boolean isFromAPI() {
-        return this.origem == OrigemFilme.API && this.ingressoId != null;
+    //Método para verificar se é da API
+    public boolean isFromTMDB() {
+        return this.origem == OrigemFilme.TMDB && this.filmeId != null;
     }
 
-    // Método para verificar se foi criado localmente
+    //Método para verificar se foi criado localmente
     public boolean isLocal() {
         return this.origem == OrigemFilme.LOCAL;
     }
@@ -117,12 +114,12 @@ public class Filme {
         this.id = id;
     }
 
-    public String getIngressoId() {
-        return ingressoId;
+    public String getFilmeId() {
+        return filmeId;
     }
 
-    public void setIngressoId(String ingressoId) {
-        this.ingressoId = ingressoId;
+    public void setFilmeId(String filmeId) {
+        this.filmeId = filmeId;
     }
 
     public String getTitulo() {
