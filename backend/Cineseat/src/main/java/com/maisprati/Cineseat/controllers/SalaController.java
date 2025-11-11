@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/salas")
-@CrossOrigin(origins = "*")
+
 public class SalaController {
 
     @Autowired
@@ -104,6 +104,12 @@ public class SalaController {
         return ResponseEntity.ok(salas);
     }
 
+    // GET /api/salas/cinema/{idCinema}
+    @GetMapping("/cinema/{idCinema}")
+    public ResponseEntity<List<SalaDTO>> buscarSalasPorCinema(@PathVariable Long idCinema) {
+        List<SalaDTO> salas = salaService.buscarSalasPorCinema(idCinema);
+        return ResponseEntity.ok(salas);
+    }
 
     // PUT /api/salas/{id} - Atualizar sala
     @PutMapping("/{id}")

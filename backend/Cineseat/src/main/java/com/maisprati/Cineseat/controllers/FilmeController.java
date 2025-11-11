@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/filmes")
-@CrossOrigin(origins = "*")
 public class FilmeController {
 
     @Autowired

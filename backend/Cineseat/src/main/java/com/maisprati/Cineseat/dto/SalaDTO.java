@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SalaDTO {
 
-    private Long id;
+    @JsonProperty("id_sala")
+    private Long idSala;
 
     private Long idCinema;
 
@@ -50,8 +51,8 @@ public class SalaDTO {
     }
 
     // Getters e Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getIdSala() { return idSala; }
+    public void setIdSala(Long idSala) { this.idSala = idSala; }
 
     public String getIngressoId() { return ingressoId; }
     public void setIngressoId(String ingressoId) { this.ingressoId = ingressoId; }
