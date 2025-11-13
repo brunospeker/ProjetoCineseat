@@ -17,6 +17,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "cinema_avaliacoes")
 public class CinemaAvaliacao {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_avaliacao_cinema")
@@ -34,11 +35,18 @@ public class CinemaAvaliacao {
     private String idIngresso;
 
     @Column(nullable = false)
-    private Integer notaGeral;
+    private Double notaGeral;
 
+    @Column(nullable = false)
     private Integer notaLimpeza;
+
+    @Column(nullable = false)
     private Integer notaAtendimento;
+
+    @Column(nullable = false)
     private Integer notaPreco;
+
+    @Column(nullable = false)
     private Integer notaAlimentacao;
 
     @Column(length = 1000)
@@ -53,19 +61,12 @@ public class CinemaAvaliacao {
     public CinemaAvaliacao() {
     }
 
-    public CinemaAvaliacao(Cinema cinema, User usuario, Integer notaGeral) {
-        this.cinema = cinema;
-        this.usuario = usuario;
-        this.notaGeral = notaGeral;
-    }
-
-    public CinemaAvaliacao(Cinema cinema, User usuario, String idIngresso, Integer notaGeral,
+    public CinemaAvaliacao(Cinema cinema, User usuario, String idIngresso,
                            Integer notaLimpeza, Integer notaAtendimento, Integer notaPreco,
                            Integer notaAlimentacao, String comentario) {
         this.cinema = cinema;
         this.usuario = usuario;
         this.idIngresso = idIngresso;
-        this.notaGeral = notaGeral;
         this.notaLimpeza = notaLimpeza;
         this.notaAtendimento = notaAtendimento;
         this.notaPreco = notaPreco;
@@ -74,74 +75,84 @@ public class CinemaAvaliacao {
     }
 
     @PrePersist
-    public void inicializarDatas() {
+    public void aoCriar() {
+        calcularNotaGeral();
         this.dataAvaliacao = LocalDateTime.now();
         this.dataAtualizacao = LocalDateTime.now();
     }
 
     @PreUpdate
-    public void atualizar() {
+    public void aoAtualizar() {
+        calcularNotaGeral();
         this.dataAtualizacao = LocalDateTime.now();
     }
 
-    public Long getIdAvaliacaoCinema() { return idAvaliacaoCinema; }
-    public void setIdAvaliacaoCinema(Long idAvaliacaoCinema) { this.idAvaliacaoCinema = idAvaliacaoCinema; }
+    private void calcularNotaGeral() {
+        int soma = 0;
+        int count = 0;
 
-    public Cinema getCinema() { return cinema; }
-    public void setCinema(Cinema cinema) { this.cinema = cinema; }
+        if (notaLimpeza != null) { soma += notaLimpeza; count++; }
+        if (notaAtendimento != null) { soma += notaAtendimento; count++; }
+        if (notaPreco != null) { soma += notaPreco; count++; }
+        if (notaAlimentacao != null) { soma += notaAlimentacao; count++; }
 
-    public User getUsuario() { return usuario; }
-    public void setUsuario(User usuario) { this.usuario = usuario; }
+        this.notaGeral = (count > 0) ? ((double) soma / count) : null;
+    }
 
-    public String getIdIngresso() { return idIngresso; }
+    public Long getIdAvaliacaoCinema() {return idAvaliacaoCinema;}
+    public void setIdAvaliacaoCinema(Long idAvaliacaoCinema) {this.idAvaliacaoCinema = idAvaliacaoCinema;}
+
+    public Cinema getCinema() {return cinema;}
+    public void setCinema(Cinema cinema) {this.cinema = cinema;}
+
+    public User getUsuario() {return usuario;}
+    public void setUsuario(User usuario) {this.usuario = usuario;}
+
+    public String getIdIngresso() {return idIngresso;}
     public void setIdIngresso(String idIngresso) {this.idIngresso = idIngresso;}
 
-    public Integer getNotaGeral() { return notaGeral; }
-    public void setNotaGeral(Integer notaGeral) {
-        if (notaGeral != null && (notaGeral < 1 || notaGeral > 5)) {
-            throw new IllegalArgumentException("A nota geral deve estar entre 1 e 5");
-        }
-        this.notaGeral = notaGeral;
-    }
+    public Double getNotaGeral() {return notaGeral;}
 
-    public Integer getNotaLimpeza() { return notaLimpeza; }
+    public Integer getNotaLimpeza() {return notaLimpeza;}
     public void setNotaLimpeza(Integer notaLimpeza) {
-        if (notaLimpeza != null && (notaLimpeza < 1 || notaLimpeza > 5)) {
-            throw new IllegalArgumentException("A nota da limpeza deve estar entre 1 e 5");
-        }
+        validarNota("limpeza", notaLimpeza);
         this.notaLimpeza = notaLimpeza;
+        calcularNotaGeral();
     }
 
-    public Integer getNotaAtendimento() { return notaAtendimento; }
+    public Integer getNotaAtendimento() {return notaAtendimento;}
     public void setNotaAtendimento(Integer notaAtendimento) {
-        if (notaAtendimento != null && (notaAtendimento < 1 || notaAtendimento > 5)) {
-            throw new IllegalArgumentException("A nota do atendimento deve estar entre 1 e 5");
-        }
+        validarNota("atendimento", notaAtendimento);
         this.notaAtendimento = notaAtendimento;
+        calcularNotaGeral();
     }
 
-    public Integer getNotaPreco() { return notaPreco; }
+    public Integer getNotaPreco() {return notaPreco;}
     public void setNotaPreco(Integer notaPreco) {
-        if (notaPreco != null && (notaPreco < 1 || notaPreco > 5)) {
-            throw new IllegalArgumentException("A nota do preço deve estar entre 1 e 5");
-        }
+        validarNota("preço", notaPreco);
         this.notaPreco = notaPreco;
+        calcularNotaGeral();
     }
 
-    public Integer getNotaAlimentacao() { return notaAlimentacao;}
+    public Integer getNotaAlimentacao() {return notaAlimentacao;}
     public void setNotaAlimentacao(Integer notaAlimentacao) {
-        if (notaAlimentacao != null && (notaAlimentacao < 1 || notaAlimentacao > 5)) {
-            throw new IllegalArgumentException("A nota da alimentação deve estar entre 1 e 5");
-        }
+        validarNota("alimentação", notaAlimentacao);
         this.notaAlimentacao = notaAlimentacao;
+        calcularNotaGeral();
     }
 
-    public String getComentario() { return comentario; }
-    public void setComentario(String comentario) { this.comentario = comentario; }
+    public String getComentario() {return comentario;}
+    public void setComentario(String comentario) {this.comentario = comentario;}
 
-    public LocalDateTime getDataAvaliacao() { return dataAvaliacao; }
-    public void setDataAvaliacao(LocalDateTime dataAvaliacao) { this.dataAvaliacao = dataAvaliacao; }
+    public LocalDateTime getDataAvaliacao() {return dataAvaliacao;}
+    public void setDataAvaliacao(LocalDateTime dataAvaliacao) {this.dataAvaliacao = dataAvaliacao;}
 
-    public LocalDateTime getDataAtualizacao() { return dataAtualizacao; } 
-    public void setDataAtualizacao(LocalDateTime dataAtualizacao) { this.dataAtualizacao = dataAtualizacao; }
+    public LocalDateTime getDataAtualizacao() {return dataAtualizacao;}
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {this.dataAtualizacao = dataAtualizacao;}
+
+    private void validarNota(String campo, Integer valor) {
+        if (valor != null && (valor < 1 || valor > 5)) {
+            throw new IllegalArgumentException("A nota de " + campo + " deve estar entre 1 e 5");
+        }
+    }
 }

@@ -17,6 +17,7 @@ public class SecurityConfig {
                 .cors(cors -> {})             // habilita o CORS
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs.yaml" ).permitAll() // libera o Swagger e OpenAPI
                         .requestMatchers("/api/avaliacoes/create").authenticated() //a ser criado ainda
                         .requestMatchers("/api/users/register", "/api/users/login", "/api/users/logout").permitAll()
                         .anyRequest().permitAll() //qualquer outra pagina fica pública

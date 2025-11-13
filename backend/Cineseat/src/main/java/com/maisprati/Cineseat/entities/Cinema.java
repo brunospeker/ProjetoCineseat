@@ -49,12 +49,15 @@ public class Cinema {
     @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CinemaAvaliacao> avaliacoes;
 
+    @Column(name = "media_geral")
+    private Double mediaGeral;
+
     public Cinema() {
     }
 
     public Cinema(Long idCinema, String nomeCinema, String site, String cnpj, String estado, String uf,
-            String cidade, String idCidade, String bairro, String numero,
-            String imagensJson, Boolean temBomboniere, List<Sala> salas, Boolean ativo) {
+            String cidade, String idCidade, String bairro, String numero, String imagensJson,
+                  Boolean temBomboniere, List<Sala> salas,  Double mediaGeral, Boolean ativo) {
         this.idCinema = idCinema;
         this.nomeCinema = nomeCinema;
         this.site = site;
@@ -69,6 +72,7 @@ public class Cinema {
         this.temBomboniere = temBomboniere;
         this.salas = salas;
         this.totalSalas = (salas != null) ? salas.size() : 0;
+        this.mediaGeral = mediaGeral;
         this.ativo = ativo;
     }
 
@@ -231,4 +235,7 @@ public class Cinema {
     public void setAvaliacoes(List<CinemaAvaliacao> avaliacoes) {
         this.avaliacoes = avaliacoes;
     }
+
+    public Double getMediaGeral() {return mediaGeral;}
+    public void setMediaGeral(Double mediaGeral) {this.mediaGeral = mediaGeral;}
 }

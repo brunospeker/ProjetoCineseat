@@ -79,6 +79,13 @@ public class CinemaService {
                 .collect(Collectors.toList());
     }
 
+    public List<CinemaDTO> findByMediaGeral(Double mediaGeral) {
+        return cinemaRepository.findByMediaGeral(mediaGeral)
+                .stream()
+                .map(CinemaDTO::new)
+                .collect(Collectors.toList());
+    }
+
     public CinemaDTO createCinema(Cinema cinema) {
         if (cinema.getSalas() != null) {
             for (Sala sala : cinema.getSalas()) {
@@ -87,6 +94,8 @@ public class CinemaService {
         }
         cinema.atualizarTotalSalas();
         cinema.setDataCriacao(LocalDateTime.now());
+        cinema.setMediaGeral(0.0);
+
         Cinema newCinema = cinemaRepository.save(cinema);
         return new CinemaDTO(newCinema);
     }
@@ -111,6 +120,7 @@ public class CinemaService {
         if (dto.getImagensJson() != null) cinema.setImagensJson(dto.getImagensJson());
         if (dto.getTemBomboniere() != null) cinema.setTemBomboniere(dto.getTemBomboniere());
         if (dto.getTotalSalas() != null) cinema.setTotalSalas(dto.getTotalSalas());
+        if (dto.getMediaGeral() != null) cinema.setMediaGeral(dto.getMediaGeral());
         if (dto.getAtivo() != null) cinema.setAtivo(dto.getAtivo());
 
         cinema.setDataAtualizacao(LocalDateTime.now());
@@ -121,5 +131,26 @@ public class CinemaService {
             cinemaRepository.delete(cinema);
             return true;
         }).orElse(false);
+    }
+
+    public List<CinemaDTO> rankingGeral() {
+        return cinemaRepository.rankingCinemas()
+                .stream()
+                .map(CinemaDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<CinemaDTO> rankingPorCidade(String cidade) {
+        return cinemaRepository.rankingCinemasByCity(cidade)
+                .stream()
+                .map(CinemaDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<CinemaDTO> rankingPorEstado(String estado) {
+        return cinemaRepository.rankingCinemasByState(estado)
+                .stream()
+                .map(CinemaDTO::new)
+                .collect(Collectors.toList());
     }
 }

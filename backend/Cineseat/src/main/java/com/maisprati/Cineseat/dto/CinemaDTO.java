@@ -17,6 +17,7 @@ public class CinemaDTO {
     private String imagensJson;
     private Boolean temBomboniere;
     private Integer totalSalas;
+    private Double mediaGeral;
     private LocalDateTime dataCriacao;
     private LocalDateTime dataAtualizacao;
     private Boolean ativo;
@@ -37,9 +38,15 @@ public class CinemaDTO {
         this.imagensJson = entity.getImagensJson();
         this.temBomboniere = entity.getTemBomboniere();
         this.totalSalas = entity.getTotalSalas();
+        this.mediaGeral = entity.getMediaGeral();
         this.dataCriacao = entity.getDataCriacao();
         this.dataAtualizacao = entity.getDataAtualizacao();
         this.ativo = entity.getAtivo();
+    }
+
+    public CinemaDTO(Long idCinema, Double mediaGeral) {
+        this.idCinema = idCinema;
+        this.mediaGeral = mediaGeral;
     }
 
     public Long getIdCinema() { return idCinema; }
@@ -80,6 +87,9 @@ public class CinemaDTO {
 
     public Integer getTotalSalas() { return totalSalas; }
     public void setTotalSalas(Integer totalSalas) { this.totalSalas = totalSalas; }
+
+    public Double getMediaGeral() { return mediaGeral; }
+    public void setMediaGeral(Double mediaGeral) {this.mediaGeral = mediaGeral;}
 
     public LocalDateTime getDataCriacao() { return dataCriacao; }
     public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }
