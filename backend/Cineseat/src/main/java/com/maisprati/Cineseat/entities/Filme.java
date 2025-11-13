@@ -12,8 +12,8 @@ public class Filme {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "ingresso_id", unique = true)
-    private String ingressoId; // ID do filme na API da Ingresso.com
+    @Column(name = "filme_Id", unique = true)
+    private String filmeId;
 
     @Column(nullable = false)
     private String titulo;
@@ -49,16 +49,60 @@ public class Filme {
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
 
-    // Construtores
+    @Enumerated(EnumType.STRING)
+    @Column(name = "origem")
+    private OrigemFilme origem; // LOCAL ou API
+
+    // Enum para identificar a origem do filme
+    public enum OrigemFilme {LOCAL, TMDB}
+
+    // Construtor padrão
     public Filme() {
         this.dataCriacao = LocalDateTime.now();
         this.dataAtualizacao = LocalDateTime.now();
     }
 
-    public Filme(String ingressoId, String titulo) {
+    // Construtor para filmes da API (consulta externa)
+    public Filme(String filmeId, String titulo) {
         this();
-        this.ingressoId = ingressoId;
+        this.filmeId = filmeId;
         this.titulo = titulo;
+        this.origem = OrigemFilme.TMDB;
+    }
+
+    // Construtor completo para filmes da API
+    public static Filme fromTMDB(String filmeId, String titulo, String sinopse, String diretor, LocalDate dataLancamento, Integer duracao, String genero, String classificacao, String posterUrl, String trailerUrl, Double nota) {
+        Filme filme = new Filme(filmeId, titulo);
+        filme.setSinopse(sinopse);
+        filme.setDiretor(diretor);
+        filme.setDataLancamento(dataLancamento);
+        filme.setDuracao(duracao);
+        filme.setGenero(genero);
+        filme.setClassificacao(classificacao);
+        filme.setPosterUrl(posterUrl);
+        filme.setTrailerUrl(trailerUrl);
+        filme.setNota(nota);
+        return filme;
+    }
+
+    // Construtor para filmes criados localmente
+    public static Filme createLocal(String titulo, String sinopse, String diretor) {
+        Filme filme = new Filme();
+        filme.setTitulo(titulo);
+        filme.setSinopse(sinopse);
+        filme.setDiretor(diretor);
+        filme.setOrigem(OrigemFilme.LOCAL);
+        return filme;
+    }
+
+    //Método para verificar se é da API
+    public boolean isFromTMDB() {
+        return this.origem == OrigemFilme.TMDB && this.filmeId != null;
+    }
+
+    //Método para verificar se foi criado localmente
+    public boolean isLocal() {
+        return this.origem == OrigemFilme.LOCAL;
     }
 
     // Getters e Setters
@@ -70,12 +114,12 @@ public class Filme {
         this.id = id;
     }
 
-    public String getIngressoId() {
-        return ingressoId;
+    public String getFilmeId() {
+        return filmeId;
     }
 
-    public void setIngressoId(String ingressoId) {
-        this.ingressoId = ingressoId;
+    public void setFilmeId(String filmeId) {
+        this.filmeId = filmeId;
     }
 
     public String getTitulo() {
@@ -181,6 +225,10 @@ public class Filme {
     public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
         this.dataAtualizacao = dataAtualizacao;
     }
+
+    public OrigemFilme getOrigem() {return origem;}
+
+    public void setOrigem(OrigemFilme origem) {this.origem = origem;}
 
     @PreUpdate
     public void preUpdate() {

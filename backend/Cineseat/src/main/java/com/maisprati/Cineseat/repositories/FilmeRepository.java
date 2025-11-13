@@ -12,11 +12,11 @@ import java.util.Optional;
 @Repository
 public interface FilmeRepository extends JpaRepository<Filme, Long> {
 
-    // Buscar filme pelo ID da API da Ingresso.com
-    Optional<Filme> findByIngressoId(String ingressoId);
+    // Buscar filme pelo ID da TMDB
+    Optional<Filme> findByFilmeId(String filmeId);
 
-    // Verificar se já existe um filme com esse ID da Ingresso.com
-    boolean existsByIngressoId(String ingressoId);
+    // Verificar se já existe um filme com esse ID na TMDB
+    boolean existsByFilmeId(String filmeId);
 
     // Buscar filmes em cartaz
     List<Filme> findByEmCartazTrue();

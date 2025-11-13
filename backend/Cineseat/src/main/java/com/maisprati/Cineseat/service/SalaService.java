@@ -91,6 +91,14 @@ public class SalaService {
                 .collect(Collectors.toList());
     }
 
+    //Buscar Salas por Cinema
+    public List<SalaDTO> buscarSalasPorCinema(Long idCinema) {
+        return salaRepository.findByCinema_IdCinema(idCinema)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     // Salvar sala
     public SalaDTO salvarSala(SalaDTO salaDTO) {
         if (salaDTO.getIdCinema() == null) {
@@ -152,7 +160,7 @@ public class SalaService {
     // Converter Entity para DTO
     private SalaDTO convertToDTO(Sala sala) {
         SalaDTO dto = new SalaDTO();
-        dto.setId(sala.getIdSala());
+        dto.setIdSala(sala.getIdSala());
         if (sala.getCinema() != null) {
             dto.setIdCinema(sala.getCinema().getIdCinema());
         }
@@ -180,7 +188,7 @@ public class SalaService {
     // Converter DTO para Entity
     private Sala convertToEntity(SalaDTO dto) {
         Sala sala = new Sala();
-        sala.setIdSala(dto.getId());
+        sala.setIdSala(dto.getIdSala());
         sala.setIngressoId(dto.getIngressoId());
         sala.setNome(dto.getNome());
         sala.setNumeroSala(dto.getNumeroSala());

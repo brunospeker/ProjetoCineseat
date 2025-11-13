@@ -7,8 +7,8 @@ public class FilmeDTO {
 
     private Long id;
 
-    @JsonProperty("ingresso_id")
-    private String ingressoId;
+    @JsonProperty("filmeID")
+    private String filmeId;
 
     private String titulo;
 
@@ -36,6 +36,8 @@ public class FilmeDTO {
     @JsonProperty("em_cartaz")
     private Boolean emCartaz;
 
+    private String origem; // "LOCAL" ou "TMDB"
+
     // Construtores
     public FilmeDTO() {}
 
@@ -53,12 +55,12 @@ public class FilmeDTO {
         this.id = id;
     }
 
-    public String getIngressoId() {
-        return ingressoId;
+    public String getFilmeId() {
+        return filmeId;
     }
 
-    public void setIngressoId(String ingressoId) {
-        this.ingressoId = ingressoId;
+    public void setFilmeId(String filmeId) {
+        this.filmeId = filmeId;
     }
 
     public String getTitulo() {
@@ -148,4 +150,13 @@ public class FilmeDTO {
     public void setEmCartaz(Boolean emCartaz) {
         this.emCartaz = emCartaz;
     }
+
+    public String getOrigem() {
+        return origem;
+    }
+
+    public void setOrigem(String origem) {
+        this.origem = origem;
+    }
+
 }

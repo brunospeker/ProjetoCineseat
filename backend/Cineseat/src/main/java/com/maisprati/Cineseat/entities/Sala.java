@@ -70,7 +70,7 @@ public class Sala {
     public Long getIdSala() {
         return idSala;
     }
-    public void setIdSala(Long id) {
+    public void setIdSala(Long idSala) {
         this.idSala= idSala;
     }
 
