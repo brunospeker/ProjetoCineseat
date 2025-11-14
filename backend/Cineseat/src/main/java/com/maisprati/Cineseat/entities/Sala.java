@@ -54,6 +54,10 @@ public class Sala {
     @JoinColumn(name = "id_cinema")
     private Cinema cinema;
 
+    // Relacionamento com poltrona
+    @OneToMany(mappedBy = "sala")
+    private List<Poltrona> poltronas;
+
     // Construtores
     public Sala() {
         this.dataCriacao = LocalDateTime.now();
