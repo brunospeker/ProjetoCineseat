@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Header from "../components/Navbar";
-import { Search, MapPin } from "lucide-react";
+import { Search, MapPin, Popcorn, Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const cinemas = [
   { nome: "Cine Plaza", estado: "SP", endereco: "Av. Paulista, 1000 - São Paulo" },
@@ -13,10 +14,29 @@ const cinemas = [
 export default function Cinema({ darkMode, setDarkMode, user, onLogout }) {
   const [busca, setBusca] = useState("");
   const [estado, setEstado] = useState("Todos");
+  const [cinemas, setCinemas] = useState([]);
+
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    fetch("http://localhost:8080/api/cinemas")
+      .then((response) => response.json())
+      .then(async (data) => {
+        const cinemasComNotas = await Promise.all(
+          data.map(async (cinema) => {
+            const response = await fetch(`http://localhost:8080/api/cinema-avaliacoes/media/cinema/${cinema.idCinema}`);
+            const nota = response.ok ? await response.json() : null;
+            return { ...cinema, notaMedia: nota || 0 };
+          })
+        );
+        setCinemas(cinemasComNotas);
+      })
+      .catch((err) => console.error("Erro ao buscar cinemas:", err));
+  }, []);
 
   const cinemasFiltrados = cinemas.filter((cinema) => {
-    const buscaOK = cinema.nome.toLowerCase().includes(busca.toLowerCase());
-    const estadoOK = estado === "Todos" || cinema.estado === estado;
+    const buscaOK = cinema.nomeCinema.toLowerCase().includes(busca.toLowerCase());
+    const estadoOK = estado === "Todos" || cinema.uf === estado;
     return buscaOK && estadoOK;
   });
 
@@ -69,16 +89,34 @@ export default function Cinema({ darkMode, setDarkMode, user, onLogout }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {cinemasFiltrados.map((cinema, index) => (
             <div
-              key={index}
-              className={`border p-4 rounded-xl hover:scale-[1.02] transition-transform ${
+              key={cinema.idCinema}
+              onClick={() => navigate(`/cinema/${cinema.idCinema}`)}
+              className={`relative overflow-visible border p-4 rounded-xl hover:scale-[1.02] transition-transform ${
                 darkMode ? "bg-white-900 border-gray-700" : "bg-gray-50 border-gray-300"
               }`}
             >
-              <h3 className="text-lg font-semibold mb-2">{cinema.nome}</h3>
-              <p className={darkMode ? "text-gray-400" : "text-gray-600"}>{cinema.endereco}</p>
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-semibold mb-2">{cinema.nomeCinema}</h3>
+                {cinema.temBomboniere && (
+                    <Popcorn className="text-yellow-400 w-5 h-5" title="Possui bomboniere" />
+                  )}
+              </div>
+              <p className={darkMode ? "text-gray-400" : "text-gray-600"}>{cinema.bairro}, {cinema.numero} — {cinema.cidade}/{cinema.estado}</p>
+              
+              <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1">
+                  <Star className="text-yellow-400 w-4 h-4" />
+                  <span className="text-sm font-semibold">
+                    {cinema.notaMedia?.toFixed(1)}
+                  </span>
+              </div>
               <span className="inline-block mt-3 bg-red-600 px-2 py-1 rounded text-xs text-white">
-                {cinema.estado}
+                {cinema.uf}
               </span>
+              <div className="absolute bottom-3 right-3 items-center justify-between mt-3">
+                <span className="inline-block bg-red-600 px-2 py-1 rounded text-xs text-white">
+                  {cinema.totalSalas} salas
+                </span>
+              </div>
             </div>
           ))}
         </div>

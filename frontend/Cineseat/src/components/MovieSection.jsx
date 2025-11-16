@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import MovieCard from "./MovieCard";
 
 export default function MovieSection({ title }) {
+  const navigate = useNavigate();
 
   const [movies, setMovies] = useState([]);
   const api_key = "606cca6cdedaffa15296e36ac4d914ef";
@@ -36,6 +38,7 @@ export default function MovieSection({ title }) {
         {movies.map((movie) => (
           <MovieCard
             key={movie.id}
+            onClick={() => navigate(`/filme/${movie.id}`)}
             title={movies.title}
             image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} />
         ))}

@@ -6,7 +6,9 @@ import logoLight from "./assets/logo-light.jpeg";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Filmes from "./pages/Filmes";
+import FilmeDetalhes from "./pages/FilmeDetalhes";
 import Cinema from "./pages/Cinema";
+import SalasCinema from "./pages/SalasCinema";
 import Cadastro from "./pages/Cadastro";
 import Perfil from "./pages/Perfil"; 
 import Conta from "./pages/Conta";
@@ -44,10 +46,12 @@ export default function App() {
           <Route path="/" element={<Home darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
           <Route path="/login" element={!user ? <Login onLogin={handleLogin} /> : <Navigate to="/" />} />
           <Route path="/cadastro" element={<Cadastro darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
-          <Route path="/filmes" element={<Filmes darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
-          <Route path="/cinema" element={<Cinema darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
           <Route path="/perfil" element={<Perfil darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
-        <Route path="/conta" element={<Conta darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
+          <Route path="/conta" element={<Conta darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
+          <Route path="/filmes" element={<Filmes darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
+          <Route path="/filme/:id" element={<FilmeDetalhes darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
+          <Route path="/cinema" element={<Cinema darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
+          <Route path="/cinema/:id" element={<SalasCinema darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
         </Routes>
       </div>
     </BrowserRouter>
