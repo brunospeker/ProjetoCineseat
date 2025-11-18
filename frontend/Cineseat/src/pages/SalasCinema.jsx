@@ -175,8 +175,8 @@ export default function SalasCinema({ darkMode, setDarkMode, user, onLogout }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {salas.map((sala) => (
             <div
-              key={sala.id}
-              onClick={() => navigate(`/cinema/${cinema.idCinema}`)}
+              key={sala.id_sala}
+              onClick={() => navigate(`/cinema/${cinema.idCinema}/${sala.id_sala}`)}
               className={`relative overflow-visible border p-4 rounded-xl hover:scale-[1.02] transition-transform ${
                 darkMode ? "bg-white-900 border-gray-700" : "bg-gray-50 border-gray-300"
               }`}

@@ -27,20 +27,6 @@ export default function Navbar({ darkMode, setDarkMode, user, onLogout }) {
 
       {/* Menu à direita */}
       <div className="flex items-center gap-6">
-        {/* Filtro de estado */}
-        <select
-          className={`border px-3 py-1 rounded ${
-            darkMode
-              ? "bg-black-800 text-white border-white-600"
-              : "bg-white text-black border-gray-400"
-          }`}
-        >
-          <option>Estado</option>
-          <option>SP</option>
-          <option>RJ</option>
-          <option>MG</option>
-          <option>RS</option>
-        </select>
 
         {/* Navegação entre páginas */}
         <Link

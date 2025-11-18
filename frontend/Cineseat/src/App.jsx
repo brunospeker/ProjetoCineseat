@@ -9,6 +9,7 @@ import Filmes from "./pages/Filmes";
 import FilmeDetalhes from "./pages/FilmeDetalhes";
 import Cinema from "./pages/Cinema";
 import SalasCinema from "./pages/SalasCinema";
+import PoltronasSala from "./pages/PoltronasSala";
 import Cadastro from "./pages/Cadastro";
 import Perfil from "./pages/Perfil"; 
 import Conta from "./pages/Conta";
@@ -52,6 +53,7 @@ export default function App() {
           <Route path="/filme/:id" element={<FilmeDetalhes darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
           <Route path="/cinema" element={<Cinema darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
           <Route path="/cinema/:id" element={<SalasCinema darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
+          <Route path="/cinema/:idCinema/:idSala" element={<PoltronasSala darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={handleLogout} />} />
         </Routes>
       </div>
     </BrowserRouter>
