@@ -49,7 +49,7 @@ export default function Cinema({ darkMode, setDarkMode, user, onLogout }) {
 
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <div className={`flex items-center border rounded-xl px-4 py-2 flex-1 ${
-            darkMode ? "bg-black-900 border-gray-700" : "bg-white border-gray-300"
+            darkMode ? "bg-gray-900 border-gray-700" : "bg-white border-gray-300"
           }`}>
             <input
               type="text"
@@ -68,7 +68,7 @@ export default function Cinema({ darkMode, setDarkMode, user, onLogout }) {
               value={estado}
               onChange={(e) => setEstado(e.target.value)}
               className={`appearance-none border px-4 py-2 pr-10 rounded-xl ${
-                darkMode ? "bg-black-900 border-gray-700 text-white" : "bg-white border-gray-300 text-black"
+                darkMode ? "bg-gray-900 border-gray-700 text-white" : "bg-white border-gray-300 text-black"
               }`}
             >
               <option>Estados</option>

@@ -12,17 +12,17 @@ const filmes = [
   {
     id: 1,
     nome: "A Vida de Chuck",
-    genero: "Ação",
+    genero: "Drama",
     data: "09/08/2025",
-    foto: "https://via.placeholder.com/120x180?text=Chuck",
+    foto: "https://ingresso-a.akamaihd.net/prd/img/movie/a-vida-de-chuck/918adc31-a705-4f28-b789-4df7d32187fc.webp",
     notas: [4, 5, 3, 5],
   },
   {
     id: 2,
-    nome: "Noite Estrelada",
-    genero: "Drama",
+    nome: "Barbie",
+    genero: "Fantasia",
     data: "01/07/2025",
-    foto: "https://via.placeholder.com/120x180?text=Noite",
+    foto: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/yRRuLt7sMBEQkHsd1S3KaaofZn7.jpg",
     notas: [5, 4, 4],
   },
 ];
@@ -52,15 +52,15 @@ export default function Perfil({ darkMode, setDarkMode, user, onLogout }) {
       <Navbar darkMode={darkMode} setDarkMode={setDarkMode} user={user} onLogout={onLogout} />
 
       {/* Abas de navegação - parte específica do Perfil */}
-      <div className="max-w-6xl mx-auto border-b border-gray-300/30 pb-4">
+      <div className="max-w-6xl mx-auto border-b border-gray-500/30 pb-4">
         <nav className="mt-4">
-          <ul className="flex justify-between max-w-6xl mx-auto items-center gap-4 border-t border-b border-gray-300/30 py-3">
+          <ul className="flex justify-between max-w-6xl mx-auto items-center gap-4 border-t border-b border-gray-500/30 py-3">
             {TABS.map((t) => (
               <li
                 key={t}
                 onClick={() => setActive(t)}
                 className={`cursor-pointer px-4 py-2 text-center w-1/4 ${
-                  active === t ? "text-red-500 font-bold border-b-4 border-red-500" : "text-gray-200"
+                  active === t ? "text-red-500 font-bold border-b-4 border-red-500" : "text-black-200"
                 }`}
               >
                 {t}

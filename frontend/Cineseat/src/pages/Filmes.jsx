@@ -4,8 +4,63 @@ import { Search, ChevronDown } from "lucide-react";
 
 const filmesEmCartaz = [
   {
-    titulo: "Barbie",
-    imagem: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/yRRuLt7sMBEQkHsd1S3KaaofZn7.jpg",
+    titulo: "O Bad Boy E Eu",
+    imagem: "https://ingresso-a.akamaihd.net/prd/img/movie/o-bad-boy-e-eu/3628a819-f945-41c5-9831-e6d92504cb6f.webp",
+    classificacao: "12",
+  },
+  {
+    titulo: "Mauricio De Sousa: O Filme",
+    imagem: "https://ingresso-a.akamaihd.net/prd/img/movie/mauricio-de-sousa-o-filme/72289697-9a7b-48ae-b5a9-2c91892b98ad.webp",
+    classificacao: "L",
+  },
+  {
+    titulo: "A Casa Mágica Da Gabby – O Filme",
+    imagem: "https://ingresso-a.akamaihd.net/prd/img/movie/a-casa-magica-da-gabby-o-filme/7ac85bca-bdab-4ef6-b1f6-d3378ff9ecf8.webp",
+    classificacao: "L",
+  },
+  {
+    titulo: "Quando O Céu Se Engana",
+    imagem: "https://ingresso-a.akamaihd.net/prd/img/movie/quando-o-ceu-se-engana/e337d096-2441-463b-a070-ffca1e655469.webp",
+    classificacao: "14",
+  },
+  {
+    titulo: "Grand Prix: A Toda Velocidade",
+    imagem: "https://ingresso-a.akamaihd.net/prd/img/movie/grand-prix-a-toda-velocidade/2687668c-87df-43b3-a749-e048f2eaef65.webp",
+    classificacao: "L",
+  },
+  {
+    titulo: "Eu E Meu Avô Nihonjin",
+    imagem: "https://ingresso-a.akamaihd.net/prd/img/movie/eu-e-meu-avo-nihonjin/599f24a2-bf70-408f-ae28-a5ec5cf4cb98.webp",
+    classificacao: "L",
+  },
+  {
+    titulo: "Uma Nova História",
+    imagem: "https://ingresso-a.akamaihd.net/prd/img/movie/uma-nova-historia/835587cf-636e-4a52-872a-a446cdb3b6a9.webp",
+    classificacao: "18",
+  },
+  {
+    titulo: "Honey, Não!",
+    imagem: "https://ingresso-a.akamaihd.net/prd/img/movie/honey-nao/d745fb7d-f195-428d-8f7f-010e075d7d07.webp",
+    classificacao: "L",
+  },
+  {
+    titulo: "Wicked ",
+    imagem: "https://ingresso-a.akamaihd.net/prd/img/movie/wicked-relancamento/e5df2983-817e-4801-94d9-7ed70b82576d.webp",
+    classificacao: "L",
+  },
+  {
+    titulo: "Perrengue Fashion",
+    imagem: "https://ingresso-a.akamaihd.net/prd/img/movie/perrengue-fashion/93e03333-1084-4fba-9cc0-ab72b37e183b.webp",
+    classificacao: "14",
+  },
+  {
+    titulo: "Se Não Fosse Você",
+    imagem: "https://ingresso-a.akamaihd.net/prd/img/movie/se-nao-fosse-voce/ee41deae-8b9d-494e-b5ef-10ba12839eb3.webp",
+    classificacao: "16",
+  },
+  {
+    titulo: "Zuzubalândia O Filme",
+    imagem: "https://ingresso-a.akamaihd.net/prd/img/movie/zuzubalandia-o-filme/98ea56ad-bca7-43ae-b809-aa573995ab4e.webp",
     classificacao: "L",
   },
 ];
