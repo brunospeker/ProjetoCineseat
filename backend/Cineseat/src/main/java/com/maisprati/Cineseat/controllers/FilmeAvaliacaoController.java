@@ -2,6 +2,10 @@ package com.maisprati.Cineseat.controllers;
 
 import com.maisprati.Cineseat.dto.FilmeAvaliacaoDTO;
 import com.maisprati.Cineseat.service.FilmeAvaliacaoService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,70 +17,63 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/filme-avaliacoes")
+@Tag(name = "Avaliações de Filmes", description = "Operações relacionadas às avaliações feitas em filmes")
 public class FilmeAvaliacaoController {
 
     @Autowired
     private FilmeAvaliacaoService filmeAvaliacaoService;
 
-    // GET /api/filme-avaliacoes - Buscar todas as avaliações
     @GetMapping
+    @Operation(summary = "Listar todas as avaliações", description = "Retorna todas as avaliações cadastradas no sistema.")
     public ResponseEntity<List<FilmeAvaliacaoDTO>> buscarTodasAvaliacoes() {
-        List<FilmeAvaliacaoDTO> avaliacoes = filmeAvaliacaoService.buscarTodasAvaliacoes();
-        return ResponseEntity.ok(avaliacoes);
+        return ResponseEntity.ok(filmeAvaliacaoService.buscarTodasAvaliacoes());
     }
 
-    // GET /api/filme-avaliacoes/filme/{filmeId} - Buscar avaliações por filme
     @GetMapping("/filme/{filmeId}")
+    @Operation(summary = "Listar avaliações por filme", description = "Retorna todas as avaliações feitas para um filme específico.")
     public ResponseEntity<List<FilmeAvaliacaoDTO>> buscarAvaliacoesPorFilme(@PathVariable Long filmeId) {
-        List<FilmeAvaliacaoDTO> avaliacoes = filmeAvaliacaoService.buscarAvaliacoesPorFilme(filmeId);
-        return ResponseEntity.ok(avaliacoes);
+        return ResponseEntity.ok(filmeAvaliacaoService.buscarAvaliacoesPorFilme(filmeId));
     }
 
-    // GET /api/filme-avaliacoes/usuario/{usuarioId} - Buscar avaliações por usuário
     @GetMapping("/usuario/{usuarioId}")
+    @Operation(summary = "Listar avaliações por usuário", description = "Retorna todas as avaliações feitas por um usuário específico.")
     public ResponseEntity<List<FilmeAvaliacaoDTO>> buscarAvaliacoesPorUsuario(@PathVariable Long usuarioId) {
-        List<FilmeAvaliacaoDTO> avaliacoes = filmeAvaliacaoService.buscarAvaliacoesPorUsuario(usuarioId);
-        return ResponseEntity.ok(avaliacoes);
+        return ResponseEntity.ok(filmeAvaliacaoService.buscarAvaliacoesPorUsuario(usuarioId));
     }
 
-    // GET /api/filme-avaliacoes/{id} - Buscar avaliação por ID
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar avaliação por ID", description = "Retorna os detalhes de uma avaliação específica.")
     public ResponseEntity<FilmeAvaliacaoDTO> buscarAvaliacaoPorId(@PathVariable Long id) {
-        Optional<FilmeAvaliacaoDTO> avaliacao = filmeAvaliacaoService.buscarAvaliacaoPorId(id);
-        return avaliacao.map(ResponseEntity::ok)
+        return filmeAvaliacaoService.buscarAvaliacaoPorId(id)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // GET /api/filme-avaliacoes/filme/{filmeId}/recentes - Buscar avaliações recentes
     @GetMapping("/filme/{filmeId}/recentes")
+    @Operation(summary = "Listar avaliações recentes do filme", description = "Retorna as avaliações mais recentes de um filme, com limite configurável.")
     public ResponseEntity<List<FilmeAvaliacaoDTO>> buscarAvaliacoesRecentes(
             @PathVariable Long filmeId,
             @RequestParam(defaultValue = "10") int limite) {
-        List<FilmeAvaliacaoDTO> avaliacoes = filmeAvaliacaoService.buscarAvaliacoesRecentesPorFilme(filmeId, limite);
-        return ResponseEntity.ok(avaliacoes);
+        return ResponseEntity.ok(filmeAvaliacaoService.buscarAvaliacoesRecentesPorFilme(filmeId, limite));
     }
 
-    // GET /api/filme-avaliacoes/filme/{filmeId}/mais-curtidas - Buscar avaliações mais curtidas
     @GetMapping("/filme/{filmeId}/mais-curtidas")
+    @Operation(summary = "Listar avaliações mais curtidas do filme", description = "Retorna as avaliações com maior número de curtidas para um filme.")
     public ResponseEntity<List<FilmeAvaliacaoDTO>> buscarAvaliacoesMaisCurtidas(
             @PathVariable Long filmeId,
             @RequestParam(defaultValue = "10") int limite) {
-        List<FilmeAvaliacaoDTO> avaliacoes = filmeAvaliacaoService.buscarAvaliacoesMaisCurtidasPorFilme(filmeId, limite);
-        return ResponseEntity.ok(avaliacoes);
+        return ResponseEntity.ok(filmeAvaliacaoService.buscarAvaliacoesMaisCurtidasPorFilme(filmeId, limite));
     }
 
-    // GET /api/filme-avaliacoes/filme/{filmeId}/estatisticas - Obter estatísticas do filme
     @GetMapping("/filme/{filmeId}/estatisticas")
+    @Operation(summary = "Obter estatísticas do filme", description = "Retorna estatísticas gerais das avaliações do filme, como média, total, etc.")
     public ResponseEntity<Map<String, Object>> obterEstatisticasFilme(@PathVariable Long filmeId) {
         Map<String, Object> estatisticas = filmeAvaliacaoService.obterEstatisticasFilme(filmeId);
-        if (estatisticas.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(estatisticas);
+        return estatisticas.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(estatisticas);
     }
 
-    // GET /api/filme-avaliacoes/verificar/{filmeId}/{usuarioId} - Verificar se usuário já avaliou
     @GetMapping("/verificar/{filmeId}/{usuarioId}")
+    @Operation(summary = "Verificar se o usuário já avaliou o filme", description = "Retorna true/false se o usuário já possui avaliação para o filme.")
     public ResponseEntity<Map<String, Boolean>> verificarAvaliacaoExistente(
             @PathVariable Long filmeId,
             @PathVariable Long usuarioId) {
@@ -84,50 +81,51 @@ public class FilmeAvaliacaoController {
         return ResponseEntity.ok(Map.of("ja_avaliou", jaAvaliou));
     }
 
-    // POST /api/filme-avaliacoes - Criar nova avaliação
     @PostMapping
+    @Operation(summary = "Criar nova avaliação", description = "Cria uma nova avaliação para um filme.")
     public ResponseEntity<?> criarAvaliacao(@RequestBody FilmeAvaliacaoDTO avaliacaoDTO) {
-        Optional<FilmeAvaliacaoDTO> avaliacaoCriada = filmeAvaliacaoService.criarAvaliacao(avaliacaoDTO);
+        Optional<FilmeAvaliacaoDTO> created = filmeAvaliacaoService.criarAvaliacao(avaliacaoDTO);
 
-        if (avaliacaoCriada.isEmpty()) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("erro", "Não foi possível criar a avaliação. Verifique se o filme e usuário existem e se o usuário já não avaliou este filme."));
+        if (created.isEmpty()) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("erro", "Não foi possível criar a avaliação. Verifique se o filme e usuário existem.")
+            );
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(avaliacaoCriada.get());
+        return ResponseEntity.status(HttpStatus.CREATED).body(created.get());
     }
 
-    // PUT /api/filme-avaliacoes/{id} - Atualizar avaliação
     @PutMapping("/{id}")
+    @Operation(summary = "Atualizar avaliação", description = "Atualiza os dados de uma avaliação existente.")
     public ResponseEntity<FilmeAvaliacaoDTO> atualizarAvaliacao(
             @PathVariable Long id,
             @RequestBody FilmeAvaliacaoDTO avaliacaoDTO) {
-        Optional<FilmeAvaliacaoDTO> avaliacaoAtualizada = filmeAvaliacaoService.atualizarAvaliacao(id, avaliacaoDTO);
-        return avaliacaoAtualizada.map(ResponseEntity::ok)
+        return filmeAvaliacaoService.atualizarAvaliacao(id, avaliacaoDTO)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE /api/filme-avaliacoes/{id} - Deletar avaliação
     @DeleteMapping("/{id}")
+    @Operation(summary = "Excluir avaliação", description = "Remove uma avaliação do sistema.")
     public ResponseEntity<Void> deletarAvaliacao(@PathVariable Long id) {
-        boolean deletada = filmeAvaliacaoService.deletarAvaliacao(id);
-        return deletada ? ResponseEntity.noContent().build()
+        return filmeAvaliacaoService.deletarAvaliacao(id)
+                ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
     }
 
-    // POST /api/filme-avaliacoes/{id}/curtir - Curtir avaliação
     @PostMapping("/{id}/curtir")
+    @Operation(summary = "Curtir avaliação", description = "Adiciona uma curtida à avaliação especificada.")
     public ResponseEntity<FilmeAvaliacaoDTO> curtirAvaliacao(@PathVariable Long id) {
-        Optional<FilmeAvaliacaoDTO> avaliacaoAtualizada = filmeAvaliacaoService.curtirAvaliacao(id);
-        return avaliacaoAtualizada.map(ResponseEntity::ok)
+        return filmeAvaliacaoService.curtirAvaliacao(id)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // POST /api/filme-avaliacoes/{id}/descurtir - Descurtir avaliação
     @PostMapping("/{id}/descurtir")
+    @Operation(summary = "Descurtir avaliação", description = "Remove uma curtida da avaliação especificada.")
     public ResponseEntity<FilmeAvaliacaoDTO> descurtirAvaliacao(@PathVariable Long id) {
-        Optional<FilmeAvaliacaoDTO> avaliacaoAtualizada = filmeAvaliacaoService.descurtirAvaliacao(id);
-        return avaliacaoAtualizada.map(ResponseEntity::ok)
+        return filmeAvaliacaoService.descurtirAvaliacao(id)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 }

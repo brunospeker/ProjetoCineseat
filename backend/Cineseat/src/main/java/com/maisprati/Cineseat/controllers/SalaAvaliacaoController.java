@@ -2,6 +2,10 @@ package com.maisprati.Cineseat.controllers;
 
 import com.maisprati.Cineseat.dto.SalaAvaliacaoDTO;
 import com.maisprati.Cineseat.service.SalaAvaliacaoService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,18 +17,18 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Avaliações de Salas", description = "Operações relacionadas às avaliações feitas em salas")
 public class SalaAvaliacaoController {
 
     @Autowired
     private SalaAvaliacaoService salaAvaliacaoService;
 
-    // Criar nova avaliação para uma sala
     @PostMapping("/salas/{salaId}/avaliacoes")
+    @Operation(summary = "Criar nova avaliação", description = "Cria uma nova avaliação para uma sala específica.")
     public ResponseEntity<SalaAvaliacaoDTO> criarAvaliacao(
             @PathVariable Long salaId,
             @RequestBody SalaAvaliacaoDTO salaAvaliacaoDTO) {
         try {
-            // Define o salaId no DTO antes de passar para o service
             salaAvaliacaoDTO.setSalaId(salaId);
 
             Optional<SalaAvaliacaoDTO> novaAvaliacao = salaAvaliacaoService.criarAvaliacao(salaAvaliacaoDTO);
@@ -39,8 +43,8 @@ public class SalaAvaliacaoController {
         }
     }
 
-    // Listar todas as avaliações de uma sala específica
     @GetMapping("/salas/{salaId}/avaliacoes")
+    @Operation(summary = "Listar avaliações por sala", description = "Retorna todas as avaliações feitas para uma sala específica.")
     public ResponseEntity<List<SalaAvaliacaoDTO>> listarAvaliacoesPorSala(@PathVariable Long salaId) {
         try {
             List<SalaAvaliacaoDTO> avaliacoes = salaAvaliacaoService.buscarAvaliacoesPorSala(salaId);
@@ -50,8 +54,8 @@ public class SalaAvaliacaoController {
         }
     }
 
-    // Buscar avaliação específica por ID
     @GetMapping("/avaliacoes-salas/{id}")
+    @Operation(summary = "Buscar avaliação por ID", description = "Retorna os detalhes de uma avaliação específica de sala.")
     public ResponseEntity<SalaAvaliacaoDTO> buscarAvaliacaoPorId(@PathVariable Long id) {
         try {
             Optional<SalaAvaliacaoDTO> avaliacao = salaAvaliacaoService.buscarAvaliacaoPorId(id);
@@ -66,15 +70,15 @@ public class SalaAvaliacaoController {
         }
     }
 
-    // Listar todas as avaliações de salas
     @GetMapping("/avaliacoes-salas")
+    @Operation(summary = "Listar todas as avaliações", description = "Retorna todas as avaliações registradas de salas.")
     public ResponseEntity<List<SalaAvaliacaoDTO>> listarTodasAvaliacoes() {
         List<SalaAvaliacaoDTO> avaliacoes = salaAvaliacaoService.buscarTodasAvaliacoes();
         return new ResponseEntity<>(avaliacoes, HttpStatus.OK);
     }
 
-    // Atualizar avaliação existente
     @PutMapping("/avaliacoes-salas/{id}")
+    @Operation(summary = "Atualizar avaliação", description = "Atualiza os dados de uma avaliação existente de sala.")
     public ResponseEntity<SalaAvaliacaoDTO> atualizarAvaliacao(
             @PathVariable Long id,
             @RequestBody SalaAvaliacaoDTO salaAvaliacaoDTO) {
@@ -91,8 +95,8 @@ public class SalaAvaliacaoController {
         }
     }
 
-    // Deletar avaliação
     @DeleteMapping("/avaliacoes-salas/{id}")
+    @Operation(summary = "Excluir avaliação", description = "Remove uma avaliação de sala do sistema.")
     public ResponseEntity<Void> deletarAvaliacao(@PathVariable Long id) {
         try {
             boolean deletada = salaAvaliacaoService.deletarAvaliacao(id);
@@ -107,8 +111,8 @@ public class SalaAvaliacaoController {
         }
     }
 
-    // Listar avaliações por usuário
     @GetMapping("/usuarios/{userId}/avaliacoes-salas")
+    @Operation(summary = "Listar avaliações por usuário", description = "Retorna todas as avaliações de salas realizadas por um usuário.")
     public ResponseEntity<List<SalaAvaliacaoDTO>> listarAvaliacoesPorUsuario(@PathVariable Long userId) {
         try {
             List<SalaAvaliacaoDTO> avaliacoes = salaAvaliacaoService.buscarAvaliacoesPorUsuario(userId);
@@ -118,8 +122,8 @@ public class SalaAvaliacaoController {
         }
     }
 
-    // Buscar estatísticas detalhadas de uma sala
     @GetMapping("/salas/{salaId}/avaliacoes/estatisticas")
+    @Operation(summary = "Estatísticas da sala", description = "Retorna estatísticas detalhadas das avaliações de uma sala, como média, total, etc.")
     public ResponseEntity<Map<String, Object>> obterEstatisticasSala(@PathVariable Long salaId) {
         try {
             Map<String, Object> estatisticas = salaAvaliacaoService.obterEstatisticasSala(salaId);
@@ -134,8 +138,8 @@ public class SalaAvaliacaoController {
         }
     }
 
-    // Buscar média de avaliações de uma sala (mantido para compatibilidade)
     @GetMapping("/salas/{salaId}/avaliacoes/media")
+    @Operation(summary = "Média geral da sala", description = "Retorna apenas a média geral das avaliações da sala.")
     public ResponseEntity<Double> obterMediaAvaliacoes(@PathVariable Long salaId) {
         try {
             Map<String, Object> estatisticas = salaAvaliacaoService.obterEstatisticasSala(salaId);
@@ -151,8 +155,8 @@ public class SalaAvaliacaoController {
         }
     }
 
-    // Curtir avaliação
     @PostMapping("/avaliacoes-salas/{id}/like")
+    @Operation(summary = "Curtir avaliação", description = "Adiciona uma curtida à avaliação de sala especificada.")
     public ResponseEntity<SalaAvaliacaoDTO> curtirAvaliacao(@PathVariable Long id) {
         try {
             Optional<SalaAvaliacaoDTO> avaliacao = salaAvaliacaoService.curtirAvaliacao(id);
@@ -167,8 +171,8 @@ public class SalaAvaliacaoController {
         }
     }
 
-    // Descurtir avaliação
     @PostMapping("/avaliacoes-salas/{id}/dislike")
+    @Operation(summary = "Descurtir avaliação", description = "Remove uma curtida da avaliação de sala especificada.")
     public ResponseEntity<SalaAvaliacaoDTO> descurtirAvaliacao(@PathVariable Long id) {
         try {
             Optional<SalaAvaliacaoDTO> avaliacao = salaAvaliacaoService.descurtirAvaliacao(id);
@@ -183,8 +187,8 @@ public class SalaAvaliacaoController {
         }
     }
 
-    // Verificar se usuário já avaliou sala
     @GetMapping("/salas/{salaId}/usuarios/{userId}/ja-avaliou")
+    @Operation(summary = "Verificar se usuário já avaliou", description = "Retorna true/false indicando se o usuário já avaliou aquela sala.")
     public ResponseEntity<Boolean> verificarSeUsuarioJaAvaliou(
             @PathVariable Long salaId,
             @PathVariable Long userId) {

@@ -4,6 +4,7 @@ import com.maisprati.Cineseat.entities.User;
 import com.maisprati.Cineseat.dto.UserDTO;
 import com.maisprati.Cineseat.service.UserService;
 import com.maisprati.Cineseat.security.JwtUtil;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+@Hidden
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
